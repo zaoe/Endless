@@ -1,0 +1,55 @@
+{
+  "type": "endless:extreme_craft",
+  "pattern": [
+    "xyyzzmmll",
+    "aannjjkoo",
+    "bbcc     ",
+    "         ",
+    "         ",
+    "         ",
+    "         ",
+    "         ",
+    "         "
+  ],
+  "key": {
+    "x": {
+      "item": "endless:neutron_pile"
+    },
+    "y": {
+      "item": "minecraft:porkchop"
+    },
+    "z": {
+      "item": "minecraft:beef"
+    },
+    "m": {
+      "item": "minecraft:mutton"
+    },
+    "o": {
+      "item": "minecraft:cod"
+    },
+    "n": {
+      "item": "minecraft:salmon"
+    },
+    "j": {
+      "item": "minecraft:tropical_fish"
+    },
+    "k": {
+      "item": "minecraft:pufferfish"
+    },
+    "l": {
+      "item": "minecraft:rabbit"
+    },
+    "a": {
+      "item": "minecraft:chicken"
+    },
+    "b": {
+      "item": "minecraft:rotten_flesh"
+    },
+    "c": {
+      "item": "minecraft:spider_eye"
+    }
+  },
+  "result": {
+    "item": "endless:meatballs"
+  }
+}

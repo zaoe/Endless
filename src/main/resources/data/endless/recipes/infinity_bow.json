@@ -1,0 +1,28 @@
+{
+  "type": "endless:extreme_craft",
+  "pattern": [
+    "   xx    ",
+    "  x z    ",
+    " x  z    ",
+    "x   z    ",
+    "y   z    ",
+    "x   z    ",
+    " x  z    ",
+    "  x z    ",
+    "   xx    "
+  ],
+  "key": {
+    "x": {
+      "item": "endless:infinity_ingot"
+    },
+    "y": {
+      "item": "endless:crystal_matrix"
+    },
+    "z": {
+      "tag": "forge:wool"
+    }
+  },
+  "result": {
+    "item": "endless:infinity_bow"
+  }
+}

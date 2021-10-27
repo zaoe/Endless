@@ -1,0 +1,28 @@
+{
+  "type": "endless:extreme_craft",
+  "pattern": [
+    " zz   zz ",
+    "zzz   zzz",
+    "zzz   zzz",
+    " zxxxxxz ",
+    " zxxyxxz ",
+    " zxxxxxz ",
+    " zxxxxxz ",
+    " zxxxxxz ",
+    "  zzzzz  "
+  ],
+  "key": {
+    "x": {
+      "item": "endless:infinity_ingot"
+    },
+    "y": {
+      "item": "endless:crystal_matrix"
+    },
+    "z": {
+      "item": "endless:neutronium_ingot"
+    }
+  },
+  "result": {
+    "item": "endless:infinity_chest"
+  }
+}

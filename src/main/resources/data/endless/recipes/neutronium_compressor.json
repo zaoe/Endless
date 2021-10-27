@@ -1,0 +1,37 @@
+{
+  "type": "endless:extreme_craft",
+  "pattern": [
+    "xxxzzzxxx",
+    "m o   o m",
+    "x o   o x",
+    "m o   o m",
+    "yoo n o y",
+    "m o   o m",
+    "x o   o x",
+    "m o   o m",
+    "xxxmxmxxx"
+  ],
+  "key": {
+    "x": {
+      "item": "minecraft:iron_block"
+    },
+    "y": {
+      "item": "minecraft:redstone_block"
+    },
+    "z": {
+      "item": "minecraft:hopper"
+    },
+    "m": {
+      "item": "endless:crystal_matrix_ingot"
+    },
+    "o": {
+      "item": "endless:neutronium_ingot"
+    },
+    "n": {
+      "item": "endless:neutronium_block"
+    }
+  },
+  "result": {
+    "item": "endless:neutronium_compressor"
+  }
+}

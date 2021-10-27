@@ -1,0 +1,25 @@
+{
+  "type": "endless:extreme_craft",
+  "pattern": [
+    " zzz zzz ",
+    " zxz zxz ",
+    " zxz zxz ",
+    "zzxz zxzz",
+    "zxxz zxxz",
+    "zzzz zzzz",
+    "         ",
+    "         ",
+    "         "
+  ],
+  "key": {
+    "x": {
+      "item": "endless:infinity_ingot"
+    },
+    "z": {
+      "item": "endless:neutronium_ingot"
+    }
+  },
+  "result": {
+    "item": "endless:infinity_feet"
+  }
+}

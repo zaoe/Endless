@@ -1,0 +1,31 @@
+{
+  "type": "endless:extreme_craft",
+  "pattern": [
+    "mmxxxxxmm",
+    "mxxxxxxxm",
+    "mx zzz xm",
+    "y zzzzz y",
+    "m zzyzz m",
+    "y zzzzz y",
+    "m  zzz  m",
+    "m       m",
+    "mmmymymmm"
+  ],
+  "key": {
+    "x": {
+      "item": "minecraft:quartz_block"
+    },
+    "y": {
+      "item": "endless:crystal_matrix_ingot"
+    },
+    "z": {
+      "item": "minecraft:redstone_block"
+    },
+    "m": {
+      "item": "minecraft:iron_block"
+    }
+  },
+  "result": {
+    "item": "endless:neutron_collector"
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "type": "endless:extreme_craft",
+  "pattern": [
+    "xyzmnojkl",
+    "         ",
+    "         ",
+    "         ",
+    "         ",
+    "         ",
+    "         ",
+    "         ",
+    "         "
+  ],
+  "key": {
+    "x": {
+      "item": "minecraft:emerald_block"
+    },
+    "y": {
+      "item": "endless:meatballs"
+    },
+    "z": {
+      "item": "endless:stew"
+    },
+    "m": {
+      "item": "endless:crystal_matrix_ingot"
+    },
+    "n": {
+      "item": "endless:neutronium_ingot"
+    },
+    "o": {
+      "item": "endless:endestpearl"
+    },
+    "j": {
+      "item": "endless:record_fragment"
+    },
+    "k": {
+      "item": "endless:diamond_lattice"
+    },
+    "l": {
+      "item": "endless:diamond_lattice"
+    }
+  },
+  "result": {
+    "item": "endless:infinity_catalyst"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "type": "endless:extreme_craft",
+  "pattern": [
+    "zzzzzzzzz",
+    "zxxxmxxxz",
+    "zxzzmzzxz",
+    "zxz   zxz",
+    "zyz   zyz",
+    "zxz   zxz",
+    "zxz   zxz",
+    "zxz   zxz",
+    "zzz   zzz"
+  ],
+  "key": {
+    "x": {
+      "item": "endless:infinity_ingot"
+    },
+    "y": {
+      "item": "endless:crystal_matrix"
+    },
+    "z": {
+      "item": "endless:neutronium_ingot"
+    },
+    "m": {
+      "item": "endless:infinity_catalyst"
+    }
+  },
+  "result": {
+    "item": "endless:infinity_legs"
+  }
+}

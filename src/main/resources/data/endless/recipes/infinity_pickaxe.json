@@ -1,0 +1,28 @@
+{
+  "type": "endless:extreme_craft",
+  "pattern": [
+    " xxxxxxx ",
+    "xxxxyxxxx",
+    "xx  z  xx",
+    "    z    ",
+    "    z    ",
+    "    z    ",
+    "    z    ",
+    "    z    ",
+    "    z    "
+  ],
+  "key": {
+    "x": {
+      "item": "endless:infinity_ingot"
+    },
+    "y": {
+      "item": "endless:crystal_matrix"
+    },
+    "z": {
+      "item": "endless:neutronium_ingot"
+    }
+  },
+  "result": {
+    "item": "endless:infinity_pickaxe"
+  }
+}
