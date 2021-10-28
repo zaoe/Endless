@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-		"tag": "forge:music_discs"
+		"tag": "minecraft:music_discs"
 	}
   ],
   "result": {

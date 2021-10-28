@@ -112,14 +112,15 @@ public class InfinityArmor extends ArmorItem{
 		}
 		if (slot == EquipmentSlotType.CHEST) {
 			tooltip.add(new TranslationTextComponent("endless.text.itemInfo.infinity_chest"));
+			tooltip.add(new StringTextComponent(TextFormatting.BLUE + "+" + TextFormatting.ITALIC + "100" + TextFormatting.RESET + "" + TextFormatting.BLUE + "% FlySpeed"));
 		}
 		if (slot == EquipmentSlotType.LEGS) {
 			tooltip.add(new TranslationTextComponent("endless.text.itemInfo.infinity_legs"));
-			tooltip.add(new StringTextComponent(TextFormatting.BLUE + "+" + TextFormatting.ITALIC + "300" + TextFormatting.RESET + "" + TextFormatting.BLUE + "% Speed"));
+			tooltip.add(new StringTextComponent(TextFormatting.BLUE + "+" + TextFormatting.ITALIC + "300" + TextFormatting.RESET + "" + TextFormatting.BLUE + "% WalkSpeed"));
 		}
 		if (slot == EquipmentSlotType.FEET) {
 			tooltip.add(new TranslationTextComponent("endless.text.itemInfo.infinity_feet"));
-			tooltip.add(new StringTextComponent(TextFormatting.BLUE + "+" + TextFormatting.ITALIC + "300" + TextFormatting.RESET + "" + TextFormatting.BLUE + "% Jump"));
+			tooltip.add(new StringTextComponent(TextFormatting.BLUE + "+" + TextFormatting.ITALIC + "400" + TextFormatting.RESET + "" + TextFormatting.BLUE + "% JumpHeight"));
 		}
 
 	}

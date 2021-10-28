@@ -6,6 +6,7 @@ import net.minecraft.item.BowItem;
 
 public class InfinityBow extends BowItem {
     public InfinityBow() {
-        super(new Properties().group(ModGroup.myGroup).isImmuneToFire());
+        super(new Properties().group(ModGroup.myGroup).isImmuneToFire().maxStackSize(1));
     }
+
 }

@@ -14,12 +14,15 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.tileentity.FurnaceTileEntity;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeTagHandler;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistryEntry;
@@ -250,7 +253,6 @@ public class ExtremeCraftRecipe implements IRecipe<IInventory> {
 //            if (tag != null && tag.isJsonNull()){
 //                map.put(entry.getKey(), CraftingHelper.getIngredient(value));
 //            }
-
 
             else map.put(entry.getKey(), CraftingHelper.getIngredient(entry.getValue()));
         }

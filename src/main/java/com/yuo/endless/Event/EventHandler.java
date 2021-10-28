@@ -57,10 +57,17 @@ public class EventHandler {
         LivingEntity entityLiving = event.getEntityLiving();
         if (entityLiving instanceof PlayerEntity){
             PlayerEntity player = (PlayerEntity) entityLiving;
-            Boolean hasChest = player.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() == ItemRegistry.infinityHead.get();
-            Boolean hasLeg = player.getItemStackFromSlot(EquipmentSlotType.LEGS).getItem() == ItemRegistry.infinityChest.get();
-            Boolean hasHead = player.getItemStackFromSlot(EquipmentSlotType.HEAD).getItem() == ItemRegistry.infinityLegs.get();
-            Boolean hasFeet = player.getItemStackFromSlot(EquipmentSlotType.FEET).getItem() == ItemRegistry.infinityLegs.get();
+            Boolean hasChest = player.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() == ItemRegistry.infinityChest.get();
+            Boolean hasLeg = player.getItemStackFromSlot(EquipmentSlotType.LEGS).getItem() == ItemRegistry.infinityLegs.get();
+            Boolean hasHead = player.getItemStackFromSlot(EquipmentSlotType.HEAD).getItem() == ItemRegistry.infinityHead.get();
+            Boolean hasFeet = player.getItemStackFromSlot(EquipmentSlotType.FEET).getItem() == ItemRegistry.infinityFeet.get();
+            String key = player.getGameProfile().getName()+":"+player.world.isRemote;
+            if (playersWithLegs.contains(key) && event.getSource().isFireDamage()){
+                event.setCanceled(true);
+            }
+//            if (hasLeg && event.getSource().isFireDamage()){
+//                event.setCanceled(true);
+//            }
             if (hasChest && hasFeet && hasHead && hasLeg){
                 event.setAmount(0);
                 return;
@@ -77,36 +84,60 @@ public class EventHandler {
         LivingEntity living = event.getEntityLiving();
         if (living instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) living;
+            Boolean hasHead = player.getItemStackFromSlot(EquipmentSlotType.HEAD).getItem() == ItemRegistry.infinityHead.get();
             Boolean hasChest = player.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() == ItemRegistry.infinityChest.get();
-            Boolean hasLegs = player.getItemStackFromSlot(EquipmentSlotType.FEET).getItem() == ItemRegistry.infinityLegs.get();
+            Boolean hasLegs = player.getItemStackFromSlot(EquipmentSlotType.LEGS).getItem() == ItemRegistry.infinityLegs.get();
+            Boolean hasFeet = player.getItemStackFromSlot(EquipmentSlotType.FEET).getItem() == ItemRegistry.infinityFeet.get();
             //防止其它模组飞行装备无法使用
             String key = player.getGameProfile().getName()+":"+player.world.isRemote;
             //head
+            if (playersWithHead.contains(key)){
+                if (hasHead){
+
+                }else {
+                    playersWithHead.remove(key);
+                }
+            }else if (hasHead){
+                playersWithHead.add(key);
+            }
             //chest
             if (playersWithChest.contains(key)) {
                 if (hasChest) {
                     player.abilities.allowFlying = true;
+                    player.abilities.setFlySpeed(0.1f); //飞行速度2倍
                 }else {
                     if (!player.isCreative()) {
                         player.abilities.allowFlying = false;
                         player.abilities.isFlying = false;
+                        player.abilities.setFlySpeed(0.05f);
                     }
                     playersWithChest.remove(key);
                 }
             }else if (hasChest) {
                 playersWithChest.add(key);
             }
-            //feet
             //legs
             if (playersWithLegs.contains(key)) {
                 if (hasLegs) {
+//                    player.abilities.setWalkSpeed(0.3f);
                     player.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.3f); //行走速度
                 } else {
+//                    player.abilities.setWalkSpeed(0.1f);
                     player.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.1f);
                     playersWithLegs.remove(key);
                 }
             } else if (hasLegs) {
                 playersWithLegs.add(key);
+            }
+            //feet
+            if (playersWithFeet.contains(key)){
+                if (hasFeet){
+
+                }else {
+                    playersWithFeet.remove(key);
+                }
+            }else if (hasFeet){
+                playersWithFeet.add(key);
             }
         }
     }
@@ -120,7 +151,6 @@ public class EventHandler {
             String key = player.getGameProfile().getName()+":"+player.world.isRemote;
             if (playersWithFeet.contains(key)) {
                 player.setMotion(0, 1.0f, 0);
-                return;
             }
         }
     }
