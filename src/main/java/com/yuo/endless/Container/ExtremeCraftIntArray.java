@@ -1,4 +1,4 @@
-package com.yuo.endless.Gui;
+package com.yuo.endless.Container;
 
 import net.minecraft.util.IIntArray;
 

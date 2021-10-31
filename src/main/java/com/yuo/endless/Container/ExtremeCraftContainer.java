@@ -1,10 +1,8 @@
-package com.yuo.endless.Gui;
+package com.yuo.endless.Container;
 
 import com.yuo.endless.Recipe.EndlessRecipeType;
 import com.yuo.endless.Recipe.ExtremeCraftRecipe;
-import com.yuo.endless.Recipe.RecipeTypeRegistry;
 import com.yuo.endless.Tiles.ExtremeCraftTile;
-import net.minecraft.block.CraftingTableBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
@@ -14,10 +12,8 @@ import net.minecraft.inventory.*;
 import net.minecraft.inventory.container.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.play.server.SSetSlotPacket;
 import net.minecraft.util.IWorldPosCallable;
-import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;

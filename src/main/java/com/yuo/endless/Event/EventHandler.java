@@ -14,9 +14,11 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.Effects;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.item.ItemEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
@@ -51,6 +53,20 @@ public class EventHandler {
             }
         }
     }
+
+    //无尽护腿火焰免疫
+    @SubscribeEvent
+    public static void legsFireImmune(LivingAttackEvent event){
+        LivingEntity entityLiving = event.getEntityLiving();
+        if (entityLiving instanceof PlayerEntity){
+            PlayerEntity player = (PlayerEntity) entityLiving;
+            String key = player.getGameProfile().getName()+":"+player.world.isRemote;
+            if (event.getSource().isFireDamage() && playersWithLegs.contains(key)){
+                event.setCanceled(true);
+            }
+        }
+    }
+
     //无尽装备 不受伤害
     @SubscribeEvent
     public static void opArmsImmuneDamage(LivingDamageEvent event){
@@ -61,10 +77,9 @@ public class EventHandler {
             Boolean hasLeg = player.getItemStackFromSlot(EquipmentSlotType.LEGS).getItem() == ItemRegistry.infinityLegs.get();
             Boolean hasHead = player.getItemStackFromSlot(EquipmentSlotType.HEAD).getItem() == ItemRegistry.infinityHead.get();
             Boolean hasFeet = player.getItemStackFromSlot(EquipmentSlotType.FEET).getItem() == ItemRegistry.infinityFeet.get();
-            String key = player.getGameProfile().getName()+":"+player.world.isRemote;
-            if (playersWithLegs.contains(key) && event.getSource().isFireDamage()){
-                event.setCanceled(true);
-            }
+//            if (playersWithLegs.contains(key) && event.getSource().isFireDamage()){
+//                event.setCanceled(true);
+//            }
 //            if (hasLeg && event.getSource().isFireDamage()){
 //                event.setCanceled(true);
 //            }
@@ -73,7 +88,7 @@ public class EventHandler {
                 return;
             }
             if (hasChest || hasFeet || hasHead || hasLeg){
-                event.setAmount(event.getAmount() * 0.999f); //减伤99.9%
+                event.setAmount(event.getAmount() * 0.001f); //减伤99.9%
             }
         }
 

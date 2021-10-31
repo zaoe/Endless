@@ -1,4 +1,4 @@
-package com.yuo.endless.Gui;
+package com.yuo.endless.Container;
 
 import com.yuo.endless.Recipe.EndlessRecipeType;
 import net.minecraft.entity.player.PlayerEntity;

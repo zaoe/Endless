@@ -16,5 +16,7 @@ public class TileTypeRegistry {
 
     public static final RegistryObject<TileEntityType<ExtremeCraftTile>> EXTREME_CRAFT_TILE = TILE_ENTITIES.register("extreme_craft_tile",
             () -> TileEntityType.Builder.create(ExtremeCraftTile::new, BlockRegistry.extremeCraftingTable.get()).build(null));
+    public static final RegistryObject<TileEntityType<NeutronCollectorTile>> NEUTRON_COLLECTOR_TILE = TILE_ENTITIES.register("neutron_collector_tile",
+            () -> TileEntityType.Builder.create(NeutronCollectorTile::new, BlockRegistry.neutronCollector.get()).build(null));
 
 }

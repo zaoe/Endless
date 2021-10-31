@@ -41,6 +41,7 @@
     "endless.text.itemInfo.infinity_feet"="无摔伤",
     #GUI
     "gui.endless.extreme_craft"="无尽工作台",
+    "gui.endless.neutron_collector"="中子态素收集器",
     "gui.endless.inventory"="物品栏",
     #物品页
     "itemGroup.Endless"="无尽贪婪"

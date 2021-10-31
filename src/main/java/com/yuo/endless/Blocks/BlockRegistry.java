@@ -30,9 +30,7 @@ public class BlockRegistry {
         return new OrdinaryBlock(Material.WOOD, 1, ToolType.AXE, 5, 5);
     });
     public static RegistryObject<Block> extremeCraftingTable = BLOCKS.register("extreme_crafting_table", ExtremeCraft::new);
-    public static RegistryObject<Block> neutronCollector = BLOCKS.register("neutron_collector", () -> {
-        return new OrdinaryBlock(Material.ROCK, 2, ToolType.PICKAXE, 10, 50);
-    });
+    public static RegistryObject<Block> neutronCollector = BLOCKS.register("neutron_collector", NeutronCollector::new);
     public static RegistryObject<Block> neutroniumCompressor = BLOCKS.register("neutronium_compressor", () -> {
         return new OrdinaryBlock(Material.ROCK, 2, ToolType.PICKAXE, 10, 50);
     });

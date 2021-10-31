@@ -1,4 +1,4 @@
-package com.yuo.endless.Gui;
+package com.yuo.endless.Container;
 
 import com.yuo.endless.Tiles.ExtremeCraftTile;
 import net.minecraft.inventory.CraftingInventory;

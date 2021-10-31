@@ -2,8 +2,9 @@ package com.yuo.endless;
 
 import com.yuo.endless.Blocks.BlockRegistry;
 import com.yuo.endless.Entity.EntityRegistry;
-import com.yuo.endless.Gui.ContainerTypeRegistry;
+import com.yuo.endless.Container.ContainerTypeRegistry;
 import com.yuo.endless.Gui.ExtremeCraftScreen;
+import com.yuo.endless.Gui.NeutronCollectorScreen;
 import com.yuo.endless.Items.ItemRegistry;
 import com.yuo.endless.Recipe.RecipeTypeRegistry;
 import com.yuo.endless.Tiles.TileTypeRegistry;
@@ -12,7 +13,6 @@ import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemModelsProperties;
-import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -47,6 +47,7 @@ public class Endless {
         //绑定Container和ContainerScreen
         event.enqueueWork(() -> {
             ScreenManager.registerFactory(ContainerTypeRegistry.extremeCraftContainer.get(), ExtremeCraftScreen::new);
+            ScreenManager.registerFactory(ContainerTypeRegistry.neutronCollectorContainer.get(), NeutronCollectorScreen::new);
         });
     }
     private void registerEntityRender(Supplier<Minecraft> minecraft){
