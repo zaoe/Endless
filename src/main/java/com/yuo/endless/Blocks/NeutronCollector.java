@@ -1,23 +1,20 @@
 package com.yuo.endless.Blocks;
 
-import com.yuo.endless.Container.ExtremeCraftContainer;
-import com.yuo.endless.Container.NeutronCollectorContainer;
-import com.yuo.endless.Tiles.ExtremeCraftTile;
 import com.yuo.endless.Tiles.NeutronCollectorTile;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SoundType;
+import com.yuo.endless.Tiles.NeutroniumCompressorTile;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.inventory.container.SimpleNamedContainerProvider;
+import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.state.DirectionProperty;
+import net.minecraft.state.StateContainer;
 import net.minecraft.stats.Stats;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
-import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
@@ -26,11 +23,23 @@ import net.minecraftforge.common.ToolType;
 
 import javax.annotation.Nullable;
 
-public class NeutronCollector extends Block {
+public class NeutronCollector extends ContainerBlock {
+    public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
 
     public NeutronCollector() {
         super(Properties.create(Material.ROCK).hardnessAndResistance(10, 50).harvestLevel(1)
                 .harvestTool(ToolType.PICKAXE));
+        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH));
+    }
+
+    //设置放下时的状态
+    public BlockState getStateForPlacement(BlockItemUseContext context) {
+        return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing().getOpposite());
+    }
+
+    @Override
+    public BlockRenderType getRenderType(BlockState state) {
+        return BlockRenderType.MODEL;
     }
 
     @Override
@@ -41,7 +50,7 @@ public class NeutronCollector extends Block {
     @Nullable
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new ExtremeCraftTile();
+        return new NeutronCollectorTile();
     }
 
     @Override
@@ -61,8 +70,8 @@ public class NeutronCollector extends Block {
     public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!state.isIn(newState.getBlock())) {
             TileEntity tileentity = worldIn.getTileEntity(pos);
-            if (tileentity instanceof ExtremeCraftTile) {
-                InventoryHelper.dropInventoryItems(worldIn, pos, (ExtremeCraftTile)tileentity);
+            if (tileentity instanceof NeutroniumCompressorTile) {
+                InventoryHelper.dropInventoryItems(worldIn, pos, (NeutronCollectorTile)tileentity);
                 worldIn.updateComparatorOutputLevel(pos, this);
             }
 
@@ -73,5 +82,24 @@ public class NeutronCollector extends Block {
                 worldIn.notifyNeighborsOfStateChange(pos.offset(direction), this);
             }
         }
+    }
+
+    @Nullable
+    @Override
+    public TileEntity createNewTileEntity(IBlockReader worldIn) {
+        return new NeutronCollectorTile();
+    }
+
+//    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+//        if (stack.hasDisplayName()) {
+//            TileEntity tileentity = worldIn.getTileEntity(pos);
+//            if (tileentity instanceof NeutronCollectorTile) {
+//                ((NeutronCollectorTile)tileentity).setCustomName(stack.getDisplayName());
+//            }
+//        }
+//
+//    }
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+        builder.add(FACING);
     }
 }

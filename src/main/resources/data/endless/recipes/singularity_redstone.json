@@ -1,0 +1,10 @@
+{
+  "type": "endless:neutronium",
+  "input": {
+    "item": "minecraft:redstone_block"
+  },
+  "count": 800,
+  "output": {
+    "item": "endless:singularity_redstone"
+  }
+}

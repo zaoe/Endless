@@ -1,9 +1,7 @@
-import sun.security.provider.ConfigFile
-
 buildscript {
     repositories {
         maven { url = 'https://files.minecraftforge.net/maven' }
-        maven { url = "https://lss233.littleservice.cn/repositories/forgedev" } //gradle中文镜像
+        //maven { url = "https://lss233.littleservice.cn/repositories/forgedev" } //gradle中文镜像
         jcenter()
         mavenCentral()
         maven { url = 'https://repo.spongepowered.org/repository/maven-public/' } //
@@ -15,6 +13,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
+
 version = "1.16.4-1.0.0"
 group = 'com.github.yuoft' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'Endless'
@@ -79,7 +78,6 @@ minecraft {
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
-
 //引入仓库
 repositories {
     maven {
@@ -94,15 +92,17 @@ repositories {
         name = "JEI"
         url = "http://dvs1.progwml6.com/files/maven"
     }
-//    maven {
-//        url = "https://codechicken.net/maven"
-//    }
+    maven {
+        url = "https://chickenbones.net/maven"
+    }
 }
 dependencies {
     minecraft 'net.minecraftforge:forge:1.16.4-35.1.4'
 
-//    compile "mezz.jei:jei_${config.mc_version}:${config.jei_version}" //引入mod API
+    compile "mezz.jei:jei-1.16.4:7.6.1.73" //引入mod API
+    compile "codechicken:CodeChickenLib:1.16.4-3.5.1.+:deobf"
     runtimeOnly fg.deobf("curse.maven:jei-238222:3245003") //引入mod
+    runtimeOnly fg.deobf("curse.maven:codechicken-242818:3151166") //引入mod
 }
 
 jar {

@@ -2,8 +2,9 @@ package com.yuo.endless.Blocks;
 
 import com.yuo.endless.Container.ExtremeCraftContainer;
 import com.yuo.endless.Tiles.ExtremeCraftTile;
-import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
@@ -26,7 +27,7 @@ import net.minecraftforge.common.ToolType;
 
 import javax.annotation.Nullable;
 
-public class ExtremeCraft extends Block {
+public class ExtremeCraft extends ContainerBlock {
     private static final ITextComponent CONTAINER_NAME = new TranslationTextComponent("gui.endless.extreme_craft");
 
     public ExtremeCraft() {
@@ -38,6 +39,12 @@ public class ExtremeCraft extends Block {
     public boolean hasTileEntity(BlockState state) {
         return true;
     }
+
+    @Override
+    public BlockRenderType getRenderType(BlockState state) {
+        return BlockRenderType.MODEL;
+    }
+
 
     @Nullable
     @Override
@@ -79,5 +86,11 @@ public class ExtremeCraft extends Block {
                 worldIn.notifyNeighborsOfStateChange(pos.offset(direction), this);
             }
         }
+    }
+
+    @Nullable
+    @Override
+    public TileEntity createNewTileEntity(IBlockReader worldIn) {
+        return new ExtremeCraftTile();
     }
 }

@@ -1,0 +1,10 @@
+{
+  "type": "endless:neutronium",
+  "input": {
+    "item": "minecraft:diamond_block"
+  },
+  "count": 500,
+  "output": {
+    "item": "endless:singularity_diamond"
+  }
+}

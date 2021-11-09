@@ -4,37 +4,28 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.gson.*;
 import com.yuo.endless.Blocks.BlockRegistry;
-import com.yuo.endless.Endless;
-import net.minecraft.block.Block;
-import net.minecraft.block.CraftingTableBlock;
-import net.minecraft.inventory.CraftResultInventory;
-import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.*;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.tileentity.FurnaceTileEntity;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeTagHandler;
-import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.crafting.CraftingHelper;
-import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public class ExtremeCraftRecipe implements IRecipe<IInventory> {
 
-    public static final Serializer SERIALIZER = new Serializer();
     static int MAX_WIDTH = 9;
     static int MAX_HEIGHT = 9;
 
@@ -55,7 +46,7 @@ public class ExtremeCraftRecipe implements IRecipe<IInventory> {
     }
 
     //配方序列器
-    private static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<ExtremeCraftRecipe>{
+    public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<ExtremeCraftRecipe>{
 
         @Override
         public ExtremeCraftRecipe read(ResourceLocation recipeId, JsonObject json) { //从json中获取信息
@@ -105,6 +96,14 @@ public class ExtremeCraftRecipe implements IRecipe<IInventory> {
         }
     }
 
+    public int getWidth() {
+        return Width;
+    }
+
+    public int getHeight() {
+        return Height;
+    }
+
     //检查配方是否与合成台物品栏吻合
     @Override
     public boolean matches(IInventory inv, World worldIn) {
@@ -121,6 +120,11 @@ public class ExtremeCraftRecipe implements IRecipe<IInventory> {
         }
 
         return false;
+    }
+
+    @Override
+    public NonNullList<Ingredient> getIngredients() {
+        return items;
     }
 
     private boolean checkMatch(IInventory inventory, int width, int height, boolean p_77573_4_) {
@@ -170,7 +174,7 @@ public class ExtremeCraftRecipe implements IRecipe<IInventory> {
 
     @Override
     public IRecipeSerializer<?> getSerializer() {
-        return SERIALIZER;
+        return RecipeSerializerRegistry.EXTREME_CRAFT.get();
     }
 
     @Override

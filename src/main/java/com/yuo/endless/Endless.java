@@ -1,24 +1,30 @@
 package com.yuo.endless;
 
 import com.yuo.endless.Blocks.BlockRegistry;
-import com.yuo.endless.Entity.EntityRegistry;
 import com.yuo.endless.Container.ContainerTypeRegistry;
+import com.yuo.endless.Entity.EntityRegistry;
 import com.yuo.endless.Gui.ExtremeCraftScreen;
 import com.yuo.endless.Gui.NeutronCollectorScreen;
+import com.yuo.endless.Gui.NeutroniumCompressorScreen;
 import com.yuo.endless.Items.ItemRegistry;
-import com.yuo.endless.Recipe.RecipeTypeRegistry;
+import com.yuo.endless.Items.Singularity;
+import com.yuo.endless.Recipe.RecipeSerializerRegistry;
 import com.yuo.endless.Tiles.TileTypeRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemModelsProperties;
+import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.ColorHandlerEvent;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.IForgeRegistry;
 
 import java.util.function.Supplier;
 
@@ -36,8 +42,13 @@ public class Endless {
         EntityRegistry.ENTITY_TYPES.register(modEventBus);
         TileTypeRegistry.TILE_ENTITIES.register(modEventBus);
         ContainerTypeRegistry.CONTAINERS.register(modEventBus);
-        RecipeTypeRegistry.RECIPE_TYPES.register(modEventBus);
+        RecipeSerializerRegistry.RECIPE_TYPES.register(modEventBus);
     }
+    public static void registerRecipeSerializers(RegistryEvent.Register<IRecipeSerializer<?>> evt) {
+        IForgeRegistry<IRecipeSerializer<?>> r = evt.getRegistry();
+        r.registerAll(RecipeSerializerRegistry.EXTREME_CRAFT.get(), RecipeSerializerRegistry.NEUTRONIUM.get());
+    }
+
     @SubscribeEvent
     public void clientSetup(final FMLClientSetupEvent event) {
         registerEntityRender(event.getMinecraftSupplier()); //注册客户端渲染
@@ -48,10 +59,27 @@ public class Endless {
         event.enqueueWork(() -> {
             ScreenManager.registerFactory(ContainerTypeRegistry.extremeCraftContainer.get(), ExtremeCraftScreen::new);
             ScreenManager.registerFactory(ContainerTypeRegistry.neutronCollectorContainer.get(), NeutronCollectorScreen::new);
+            ScreenManager.registerFactory(ContainerTypeRegistry.neutroniumCompressorContainer.get(), NeutroniumCompressorScreen::new);
         });
     }
+
     private void registerEntityRender(Supplier<Minecraft> minecraft){
         ItemRenderer renderer = minecraft.get().getItemRenderer();
+    }
+
+    //注册物品染色
+    @SubscribeEvent
+    public static void itemColors(ColorHandlerEvent.Item event) {
+        // 第二个参数代表“所有需要使用此 IItemColor 的物品”，是一个 var-arg Item。
+        // 有鉴于第一个参数是一个只有一个方法的接口，我们也可以直接在这里使用 lambda 表达式。
+        event.getItemColors().register((stack, color) ->{
+            return Singularity.getColor(stack);
+        }, ItemRegistry.singularityIron.get(), ItemRegistry.singularityGold.get(), ItemRegistry.singularityDiamond.get()
+                , ItemRegistry.singularityEmerald.get(), ItemRegistry.singularityNetherite.get(), ItemRegistry.singularityCoal.get()
+                , ItemRegistry.singularityLapis.get(), ItemRegistry.singularityRedstone.get(), ItemRegistry.singularityQuartz.get());
+
+        // 出于某些原因，你还可以在这里拿到之前的 `BlockColors`。在某些时候这个玩意会很有用。
+//        BlockColors blockColorHandler = event.getBlockColors();
     }
 
     //设置弓物品的动态属性

@@ -1,5 +1,8 @@
 {
   "variants": {
-    "": { "model": "endless:block/neutronium_compressor" }
+    "facing=north": { "model": "endless:block/neutronium_compressor" },
+    "facing=east": { "model": "endless:block/neutronium_compressor" ,"y": 90},
+    "facing=south": { "model": "endless:block/neutronium_compressor" ,"y": 180},
+    "facing=west": { "model": "endless:block/neutronium_compressor" ,"y": 270}
   }
 }

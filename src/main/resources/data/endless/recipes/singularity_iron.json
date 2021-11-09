@@ -1,0 +1,10 @@
+{
+  "type": "endless:neutronium",
+  "input": {
+    "item": "minecraft:iron_block"
+  },
+  "count": 700,
+  "output": {
+    "item": "endless:singularity_iron"
+  }
+}

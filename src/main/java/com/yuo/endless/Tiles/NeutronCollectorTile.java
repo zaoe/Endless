@@ -6,27 +6,25 @@ import com.yuo.endless.Items.ItemRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.FurnaceTileEntity;
 import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.tileentity.LockableTileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nullable;
 
-public class NeutronCollectorTile extends TileEntity implements ITickableTileEntity, INamedContainerProvider, IInventory {
+public class NeutronCollectorTile extends LockableTileEntity implements ITickableTileEntity, ISidedInventory {
     private int timer; //计时器
-    private NonNullList<ItemStack> output =NonNullList.withSize(1, ItemStack.EMPTY); //输出栏
+    private NonNullList<ItemStack> output = NonNullList.withSize(1, ItemStack.EMPTY); //输出栏
     private final NCIntArray data = new NCIntArray();
 
     public NeutronCollectorTile() {
@@ -35,10 +33,13 @@ public class NeutronCollectorTile extends TileEntity implements ITickableTileEnt
 
     @Override
     public void tick() {
+        if (!this.output.get(0).isEmpty() && this.output.get(0).getCount() == 64) return; //产物已满，停止计时
         this.timer++;
+        this.data.set(0, this.timer);
         if (world.isRemote || world == null) return;
         if (this.timer >= 1200){
             this.timer = 0;
+            this.data.set(0, this.timer);
             ItemStack stack = this.output.get(0);
             //产物为空 设置产物 否则数量加1
             if(stack.isEmpty()) this.output.set(0, new ItemStack(ItemRegistry.neutronPile.get()));
@@ -89,14 +90,13 @@ public class NeutronCollectorTile extends TileEntity implements ITickableTileEnt
     }
 
     @Override
-    public ITextComponent getDisplayName() {
-        return new StringTextComponent("111");
+    protected ITextComponent getDefaultName() {
+        return new TranslationTextComponent("gui.endless.neutron_collector");
     }
 
-    @Nullable
     @Override
-    public Container createMenu(int p_createMenu_1_, PlayerInventory p_createMenu_2_, PlayerEntity p_createMenu_3_) {
-        return new NeutronCollectorContainer(p_createMenu_1_, p_createMenu_2_, this, this.data);
+    protected Container createMenu(int id, PlayerInventory player) {
+        return new NeutronCollectorContainer(id, player, this, this.data);
     }
 
     @Override
@@ -111,7 +111,7 @@ public class NeutronCollectorTile extends TileEntity implements ITickableTileEnt
 
     @Override
     public ItemStack getStackInSlot(int index) {
-        return this.output.get(index);
+        return this.output.get(0);
     }
 
     @Override
@@ -141,5 +141,28 @@ public class NeutronCollectorTile extends TileEntity implements ITickableTileEnt
     @Override
     public void clear() {
         this.output.clear();
+    }
+
+    @Override
+    public boolean isItemValidForSlot(int index, ItemStack stack) {
+        return false;
+    }
+
+    //通过面获取slot
+    @Override
+    public int[] getSlotsForFace(Direction side) {
+        return side == Direction.DOWN ? new int[]{0} : new int[]{1};
+    }
+
+    //自动输入
+    @Override
+    public boolean canInsertItem(int index, ItemStack itemStackIn, @Nullable Direction direction) {
+        return false;
+    }
+
+    //自动输出
+    @Override
+    public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
+        return direction == Direction.DOWN ? true : false;
     }
 }

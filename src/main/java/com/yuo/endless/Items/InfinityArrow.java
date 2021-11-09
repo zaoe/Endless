@@ -1,6 +1,5 @@
 package com.yuo.endless.Items;
 
-import com.yuo.endless.tab.ModGroup;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.item.ArrowItem;

@@ -1,0 +1,10 @@
+{
+  "type": "endless:neutronium",
+  "input": {
+    "item": "minecraft:coal_block"
+  },
+  "count": 900,
+  "output": {
+    "item": "endless:singularity_coal"
+  }
+}

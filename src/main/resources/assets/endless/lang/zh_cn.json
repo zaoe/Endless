@@ -12,6 +12,15 @@
     "item.endless.infinity_ingot"="无尽之锭",
     "item.endless.record_fragment"="唱片碎片",
     "item.endless.mattercluster"="物质团",
+    "item.endless.singularity_coal"="奇点-煤炭",
+    "item.endless.singularity_iron"="奇点-铁",
+    "item.endless.singularity_gold"="奇点-金",
+    "item.endless.singularity_diamond"="奇点-钻石",
+    "item.endless.singularity_emerald"="奇点-绿宝石",
+    "item.endless.singularity_netherite"="奇点-下界合金",
+    "item.endless.singularity_lapis"="奇点-青金石",
+    "item.endless.singularity_redstone"="奇点-红石",
+    "item.endless.singularity_quartz"="奇点-石英",
     #工具
     "item.endless.infinity_pickaxe"="世界崩解之镐",
     "item.endless.infinity_axe"="自然荒芜之斧",
@@ -42,7 +51,7 @@
     #GUI
     "gui.endless.extreme_craft"="无尽工作台",
     "gui.endless.neutron_collector"="中子态素收集器",
-    "gui.endless.inventory"="物品栏",
+    "gui.endless.neutronium_compressor"="中子态素压缩机",
     #物品页
     "itemGroup.Endless"="无尽贪婪"
 }

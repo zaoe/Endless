@@ -19,4 +19,7 @@ public class ContainerTypeRegistry {
     public static final RegistryObject<ContainerType<NeutronCollectorContainer>> neutronCollectorContainer = CONTAINERS.register("neutron_collector_container", () ->
             IForgeContainerType.create((int windowId, PlayerInventory inv, PacketBuffer data) ->
                     new NeutronCollectorContainer(windowId, inv)));
+    public static final RegistryObject<ContainerType<NeutroniumCompressorContainer>> neutroniumCompressorContainer = CONTAINERS.register("neutronium_compressor_container", () ->
+            IForgeContainerType.create((int windowId, PlayerInventory inv, PacketBuffer data) ->
+                    new NeutroniumCompressorContainer(windowId, inv)));
 }

@@ -6,16 +6,18 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.INameable;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nullable;
 
 //存储工作台数据
-public class ExtremeCraftTile extends TileEntity implements IInventory {
+public class ExtremeCraftTile extends TileEntity implements IInventory, INameable {
 
     private NonNullList<ItemStack> items = NonNullList.withSize(81, ItemStack.EMPTY); //存储物品
     private NonNullList<ItemStack> reslut = NonNullList.withSize(1, ItemStack.EMPTY); //存储合成物品
@@ -137,5 +139,10 @@ public class ExtremeCraftTile extends TileEntity implements IInventory {
         ItemStackHelper.loadAllItems(tag, this.items);
         CompoundNBT resultNbt = (CompoundNBT) tag.get("Result");
         this.reslut.set(0, ItemStack.read(resultNbt));
+    }
+
+    @Override
+    public ITextComponent getName() {
+        return new TranslationTextComponent("gui.endless.extreme_craft");
     }
 }

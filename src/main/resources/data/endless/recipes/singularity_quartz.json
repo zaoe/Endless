@@ -1,0 +1,10 @@
+{
+  "type": "endless:neutronium",
+  "input": {
+    "item": "minecraft:quartz_block"
+  },
+  "count": 850,
+  "output": {
+    "item": "endless:singularity_quartz"
+  }
+}

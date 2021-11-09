@@ -1,9 +1,8 @@
 package com.yuo.endless.Items;
 
 import com.yuo.endless.tab.ModGroup;
-import net.minecraft.item.*;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
+import net.minecraft.item.Food;
+import net.minecraft.item.Item;
 
 //食物
 public class OrdinaryFood extends Item {

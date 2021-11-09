@@ -9,11 +9,8 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemTier;
 import net.minecraft.item.PickaxeItem;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.NonNullList;
-import net.minecraftforge.common.ToolType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -48,7 +45,7 @@ public class InfinityPickaxe extends PickaxeItem {
 
     @Override
     public float getDestroySpeed(ItemStack stack, BlockState state) {
-        return 99.0f;
+        return 999.0f;
     }
 
     @Override

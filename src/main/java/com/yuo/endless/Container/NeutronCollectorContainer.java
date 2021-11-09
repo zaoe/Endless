@@ -23,7 +23,7 @@ public class NeutronCollectorContainer extends Container {
         this.data = intArray;
         trackIntArray(data);
         //中子素生成槽
-        this.addSlot(new NCOutputSlot(output, 0, 79,34));
+        this.addSlot(new NCOutputSlot(output, 0, 80,35));
         //添加玩家物品栏
         for(int i = 0; i < 3; ++i) {
             for(int j = 0; j < 9; ++j) {
@@ -50,12 +50,12 @@ public class NeutronCollectorContainer extends Container {
             ItemStack itemStack1 = slot.getStack();
             itemstack = itemStack1.copy();
             if (index != 0){
-               if (index >= 1 && index < 29) { //从物品栏到快捷栏
-                    if (!this.mergeItemStack(itemStack1, 37, 46, false)) return ItemStack.EMPTY;
-                } else if (index >= 29 && index < 38 ) {
-                    if (!this.mergeItemStack(itemStack1, 10, 37, false)) return ItemStack.EMPTY;
+               if (index >= 1 && index < 28) { //从物品栏到快捷栏
+                    if (!this.mergeItemStack(itemStack1, 28, 37, false)) return ItemStack.EMPTY;
+                } else if (index >= 28 && index < 37 ) {
+                    if (!this.mergeItemStack(itemStack1, 1, 28, false)) return ItemStack.EMPTY;
                 }
-            } else if (!this.mergeItemStack(itemStack1, 10, 46, false)) return ItemStack.EMPTY; //取出来
+            } else if (!this.mergeItemStack(itemStack1, 1, 37, false)) return ItemStack.EMPTY; //取出来
 
             if (itemStack1.isEmpty()) slot.putStack(ItemStack.EMPTY);
             else slot.onSlotChanged();
@@ -69,7 +69,7 @@ public class NeutronCollectorContainer extends Container {
 
     //获取运行时间
     public int getTimer(){
-        return (int) Math.ceil(this.data.get(0) / 1200 * 24);
+        return (int) Math.ceil(this.data.get(0) / 1200.0 * 24);
     }
 
 }

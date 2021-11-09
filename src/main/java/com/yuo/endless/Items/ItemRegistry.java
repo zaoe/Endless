@@ -5,6 +5,7 @@ import com.yuo.endless.Blocks.BlockRegistry;
 import com.yuo.endless.Endless;
 import com.yuo.endless.Items.Tool.*;
 import com.yuo.endless.tab.ModGroup;
+import net.minecraft.block.Blocks;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.BlockItem;
@@ -23,6 +24,34 @@ public class ItemRegistry {
 	});
 	public static RegistryObject<Item> stew = ITEMS.register("stew", () -> {
 		return new OrdinaryFood(MyFoods.STEW);
+	});
+	//奇点
+	public static RegistryObject<Item> singularityCoal = ITEMS.register("singularity_coal", () -> {
+		return new Singularity(Blocks.COAL_BLOCK);
+	});
+	public static RegistryObject<Item> singularityIron = ITEMS.register("singularity_iron", () -> {
+		return new Singularity(Blocks.IRON_BLOCK);
+	});
+	public static RegistryObject<Item> singularityGold = ITEMS.register("singularity_gold", () -> {
+		return new Singularity(Blocks.GOLD_BLOCK);
+	});
+	public static RegistryObject<Item> singularityDiamond = ITEMS.register("singularity_diamond", () -> {
+		return new Singularity(Blocks.DIAMOND_BLOCK);
+	});
+	public static RegistryObject<Item> singularityNetherite = ITEMS.register("singularity_netherite", () -> {
+		return new Singularity(Blocks.NETHERITE_BLOCK);
+	});
+	public static RegistryObject<Item> singularityEmerald = ITEMS.register("singularity_emerald", () -> {
+		return new Singularity(Blocks.EMERALD_BLOCK);
+	});
+	public static RegistryObject<Item> singularityLapis = ITEMS.register("singularity_lapis", () -> {
+		return new Singularity(Blocks.LAPIS_BLOCK);
+	});
+	public static RegistryObject<Item> singularityRedstone = ITEMS.register("singularity_redstone", () -> {
+		return new Singularity(Blocks.REDSTONE_BLOCK);
+	});
+	public static RegistryObject<Item> singularityQuartz = ITEMS.register("singularity_quartz", () -> {
+		return new Singularity(Blocks.QUARTZ_BLOCK);
 	});
 	public static RegistryObject<Item> diamondLattice = ITEMS.register("diamond_lattice", OrdinaryItem::new);
 	public static RegistryObject<Item> crystalMatrixIngot = ITEMS.register("crystal_matrix_ingot", OrdinaryItem::new);

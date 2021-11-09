@@ -2,8 +2,6 @@ package com.yuo.endless.Tiles;
 
 import com.yuo.endless.Blocks.BlockRegistry;
 import com.yuo.endless.Endless;
-import com.yuo.endless.Recipe.EndlessRecipeType;
-import com.yuo.endless.Recipe.RecipeTypeRegistry;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
@@ -18,5 +16,7 @@ public class TileTypeRegistry {
             () -> TileEntityType.Builder.create(ExtremeCraftTile::new, BlockRegistry.extremeCraftingTable.get()).build(null));
     public static final RegistryObject<TileEntityType<NeutronCollectorTile>> NEUTRON_COLLECTOR_TILE = TILE_ENTITIES.register("neutron_collector_tile",
             () -> TileEntityType.Builder.create(NeutronCollectorTile::new, BlockRegistry.neutronCollector.get()).build(null));
+    public static final RegistryObject<TileEntityType<NeutroniumCompressorTile>> NEUTRONIUM_COOMPRESSOR_TILE = TILE_ENTITIES.register("neutronium_compressor_tile",
+            () -> TileEntityType.Builder.create(NeutroniumCompressorTile::new, BlockRegistry.neutroniumCompressor.get()).build(null));
 
 }

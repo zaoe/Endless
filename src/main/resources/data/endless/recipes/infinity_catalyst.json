@@ -2,7 +2,7 @@
   "type": "endless:extreme_craft",
   "pattern": [
     "xyzmnojkl",
-    "         ",
+    "abcdefgh ",
     "         ",
     "         ",
     "         ",
@@ -37,7 +37,31 @@
       "item": "endless:diamond_lattice"
     },
     "l": {
-      "item": "endless:diamond_lattice"
+      "item": "endless:singularity_coal"
+    },
+    "a": {
+      "item": "endless:singularity_iron"
+    },
+    "b": {
+      "item": "endless:singularity_gold"
+    },
+    "c": {
+      "item": "endless:singularity_diamond"
+    },
+    "d": {
+      "item": "endless:singularity_emerald"
+    },
+    "e": {
+      "item": "endless:singularity_netherite"
+    },
+    "f": {
+      "item": "endless:singularity_lapis"
+    },
+    "g": {
+      "item": "endless:singularity_redstone"
+    },
+    "h": {
+      "item": "endless:singularity_quartz"
     }
   },
   "result": {

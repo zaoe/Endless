@@ -3,7 +3,6 @@ package com.yuo.endless.Blocks;
 import com.yuo.endless.Endless;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.tags.ItemTags;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
@@ -31,7 +30,5 @@ public class BlockRegistry {
     });
     public static RegistryObject<Block> extremeCraftingTable = BLOCKS.register("extreme_crafting_table", ExtremeCraft::new);
     public static RegistryObject<Block> neutronCollector = BLOCKS.register("neutron_collector", NeutronCollector::new);
-    public static RegistryObject<Block> neutroniumCompressor = BLOCKS.register("neutronium_compressor", () -> {
-        return new OrdinaryBlock(Material.ROCK, 2, ToolType.PICKAXE, 10, 50);
-    });
+    public static RegistryObject<Block> neutroniumCompressor = BLOCKS.register("neutronium_compressor", NeutroniumCompressor::new);
 }

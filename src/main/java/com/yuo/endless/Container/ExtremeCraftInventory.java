@@ -2,7 +2,6 @@ package com.yuo.endless.Container;
 
 import com.yuo.endless.Tiles.ExtremeCraftTile;
 import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;

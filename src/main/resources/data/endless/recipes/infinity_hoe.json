@@ -1,15 +1,15 @@
 {
   "type": "endless:extreme_craft",
   "pattern": [
-    "   z     ",
-    " xxxx    ",
-    "xxxxx    ",
-    "x  yx    ",
-    "   z     ",
-    "   z     ",
-    "   z     ",
-    "   z     ",
-    "   z     "
+    "   z ",
+    " xxxx",
+    "xxxxx",
+    "x  yx",
+    "   z ",
+    "   z ",
+    "   z ",
+    "   z ",
+    "   z "
   ],
   "key": {
     "x": {
