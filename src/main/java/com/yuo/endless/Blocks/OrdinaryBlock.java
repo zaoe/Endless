@@ -13,4 +13,5 @@ public class OrdinaryBlock extends Block{
 		super(Properties.create(material).harvestLevel(harvestLevel).harvestTool(toolType)
 				.hardnessAndResistance(hardness, resistancelln));
 	}
+
 }

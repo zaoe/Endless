@@ -222,4 +222,5 @@ public class NeutroniumCompressorTile extends LockableTileEntity implements ITic
     public Inventory getInventory(){
         return new Inventory(this.items.get(0), this.items.get(1));
     }
+
 }

@@ -13,7 +13,10 @@ public enum MyItemTier implements IItemTier {
         return Ingredient.fromItems(ItemRegistry.infinityIngot.get());
     }),
     //数值无穷表示：Double或Float的POSITIVE_INFINITY（正）或NEGATIVE_INFINITY（负）
-    INFINITY(9999, 99.0f, Float.POSITIVE_INFINITY, 99, 0, () -> {
+    INFINITY_TOOL(9999, 9999.0f, 10, 9999, 0, () -> {
+        return Ingredient.fromItems(ItemRegistry.infinityIngot.get());
+    }),
+    INFINITY_ARMS(9999, 9999.0f, Float.POSITIVE_INFINITY, 9999, 0, () -> {
         return Ingredient.fromItems(ItemRegistry.infinityIngot.get());
     });
 

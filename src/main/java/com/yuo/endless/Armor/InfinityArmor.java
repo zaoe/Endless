@@ -1,18 +1,22 @@
 package com.yuo.endless.Armor;
 
 import com.yuo.endless.Items.ItemRegistry;
+import com.yuo.endless.Items.Tool.EndlessItemEntity;
 import com.yuo.endless.tab.ModGroup;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.monster.EndermanEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Rarity;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -28,9 +32,16 @@ import java.util.List;
 public class InfinityArmor extends ArmorItem{
 
 	private static Properties properties = new Properties().maxStackSize(1).group(ModGroup.myGroup);
+	public static boolean FLAG = false;
 
 	public InfinityArmor(EquipmentSlotType slot) {
 		super(MyArmorMaterial.INFINITY, slot, properties);
+	}
+
+	//不会触发末影人仇恨
+	@Override
+	public boolean isEnderMask(ItemStack stack, PlayerEntity player, EndermanEntity endermanEntity) {
+		return true;
 	}
 
 	//盔甲在身上时触发效果
@@ -43,7 +54,7 @@ public class InfinityArmor extends ArmorItem{
 				Item item = next.getItem();
 				if (item.equals(ItemRegistry.infinityHead.get())){
 					if (player.areEyesInFluid(FluidTags.WATER)){ //玩家视线在水中
-						player.addPotionEffect(new EffectInstance(Effects.WATER_BREATHING, 0, 5));
+						player.setAir(300);
 					}
 					player.getFoodStats().addStats(20, 20f); //饱腹
 					player.addPotionEffect(new EffectInstance(Effects.NIGHT_VISION, 300, 0)); //夜视
@@ -69,6 +80,11 @@ public class InfinityArmor extends ArmorItem{
 					player.isImmuneToFire(); //免疫火伤
 				}
 			}
+			if (!(next.getItem() instanceof InfinityArmor)){
+				FLAG = false;
+				continue;
+			}
+			FLAG = true;
 		}
 	}
 
@@ -80,30 +96,36 @@ public class InfinityArmor extends ArmorItem{
 //	}
 
 	//盔甲无法损坏
-	@Override
-	public void setDamage(ItemStack stack, int damage) {
-		super.setDamage(stack, 0);
-	}
+//	@Override
+//	public void setDamage(ItemStack stack, int damage) {
+//		super.setDamage(stack, 0);
+//	}
 
 	@Override
-	public Rarity getRarity(ItemStack stack) {
-		return Rarity.create("COSMIC", TextFormatting.RED);
+	public boolean isDamageable() {
+		return false;
 	}
+
+	private static final RenderType RENDER_TYPE = RenderType.getEyes(new ResourceLocation("textures/entity/enderman/enderman_eyes.png"));
 
 	//渲染盔甲模型
 //	@Nullable
 //	@Override
 //	public <A extends BipedModel<?>> A getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlotType armorSlot, A _default) {
-//		ModelArmorInfinity model = armorSlot == EquipmentSlotType.LEGS ? ModelArmorInfinity.legModel : ModelArmorInfinity.armorModel;
-//		model.update(entityLiving, itemStack, armorSlot);
-//		return (A) model;
+//		_default.getRenderType(new ResourceLocation(Endless.MODID, "textures/models/infinity_armor_eyes.png"));
+//		_default.bipedHeadwear.addBox(-4.0F, -8.0F, -4.0F, 8, 8, 8, 0.5F);
+//		Minecraft mc = Minecraft.getInstance();
+//		RenderTypeBuffers buffers = mc.getRenderTypeBuffers();
+//		IVertexBuilder ivertexbuilder = mc.getRenderTypeBuffers().getBufferSource().getBuffer(RENDER_TYPE);
+//		_default.bipedHeadwear.render(new MatrixStack(), ivertexbuilder, 15728640, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+//		return _default;
 //	}
 
 	//不会损坏
-	@Override
-	public int getDamageReduceAmount() {
-		return 1000;
-	}
+//	@Override
+//	public int getDamageReduceAmount() {
+//		return 1000;
+//	}
 
 	@Override
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
@@ -123,6 +145,17 @@ public class InfinityArmor extends ArmorItem{
 			tooltip.add(new StringTextComponent(TextFormatting.BLUE + "+" + TextFormatting.ITALIC + "400" + TextFormatting.RESET + "" + TextFormatting.BLUE + "% JumpHeight"));
 		}
 
+	}
+
+	@Nullable
+	@Override
+	public Entity createEntity(World world, Entity location, ItemStack itemstack) {
+		return new EndlessItemEntity(world, location.getPosX(), location.getPosY(), location.getPosZ(), itemstack);
+	}
+
+	@Override
+	public boolean hasCustomEntity(ItemStack stack) {
+		return true;
 	}
 
 }

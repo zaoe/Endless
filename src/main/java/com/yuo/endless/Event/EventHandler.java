@@ -4,23 +4,28 @@ import com.yuo.endless.Armor.InfinityArmor;
 import com.yuo.endless.Endless;
 import com.yuo.endless.Items.ItemRegistry;
 import com.yuo.endless.Items.Tool.*;
+import net.minecraft.block.Blocks;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.monster.SkeletonEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.item.ItemEvent;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.event.entity.living.LivingFallEvent;
+import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -195,5 +200,49 @@ public class EventHandler {
         }
     }
 
+    //原版掉落修改
+    @SubscribeEvent
+    public static void dropsItem(LivingDropsEvent event){
+        LivingEntity entityLiving = event.getEntityLiving();
+        Entity source = event.getSource().getTrueSource();
+        if (!(source instanceof PlayerEntity)) return;
+        PlayerEntity player = (PlayerEntity) source;
+
+        if (entityLiving instanceof SkeletonEntity){ //炽焰之啄颅剑击杀小白掉落调零骷髅头
+            ItemStack heldItem = player.getHeldItem(Hand.MAIN_HAND);
+            if (heldItem.getItem() instanceof SkullfireSword){
+                spawnDrops(Items.WITHER_SKELETON_SKULL, 1, entityLiving.world, entityLiving.getPosition(), event);
+            }
+        }
+    }
+
+    //无尽镐 锤形态右键获取基岩
+    @SubscribeEvent
+    public static void breakBedrock(PlayerInteractEvent.RightClickBlock event){
+        ItemStack stack = event.getItemStack();
+        BlockPos pos = event.getPos();
+        World world = event.getWorld();
+        PlayerEntity player = event.getPlayer();
+        if (stack.getItem() instanceof InfinityPickaxe && world.getBlockState(pos).getBlock().equals(Blocks.BEDROCK)){
+            if (stack.hasTag() && stack.getTag().getBoolean("hammer")){
+                world.addEntity(new ItemEntity(world, player.getPosX(), player.getPosY(), player.getPosZ(), new ItemStack(Blocks.BEDROCK)));
+                world.setBlockState(pos, Blocks.AIR.getDefaultState());
+            }
+        }
+    }
+
+    /**
+     * 添加额外掉落
+     * @param item 需要掉落的物品
+     * @param count 数量
+     * @param world 世界
+     * @param pos 坐标
+     * @param event 事件
+     */
+    private static void spawnDrops(Item item, int count, World world, BlockPos pos, LivingDropsEvent event){
+        ItemStack stack1 = new ItemStack(item, count);
+        ItemEntity itemEntity = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), stack1);
+        event.getDrops().add(itemEntity);
+    }
 }
 

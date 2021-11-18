@@ -27,31 +27,31 @@ public class ItemRegistry {
 	});
 	//奇点
 	public static RegistryObject<Item> singularityCoal = ITEMS.register("singularity_coal", () -> {
-		return new Singularity(Blocks.COAL_BLOCK);
+		return new Singularity(0x1f1e1e, Blocks.COAL_BLOCK.getMaterialColor().colorValue);
 	});
 	public static RegistryObject<Item> singularityIron = ITEMS.register("singularity_iron", () -> {
-		return new Singularity(Blocks.IRON_BLOCK);
+		return new Singularity(0xd1cfcf, Blocks.IRON_BLOCK.getMaterialColor().colorValue);
 	});
 	public static RegistryObject<Item> singularityGold = ITEMS.register("singularity_gold", () -> {
-		return new Singularity(Blocks.GOLD_BLOCK);
+		return new Singularity(0xfffd90, Blocks.GOLD_BLOCK.getMaterialColor().colorValue);
 	});
 	public static RegistryObject<Item> singularityDiamond = ITEMS.register("singularity_diamond", () -> {
-		return new Singularity(Blocks.DIAMOND_BLOCK);
+		return new Singularity(0x9efeeb, Blocks.DIAMOND_BLOCK.getMaterialColor().colorValue);
 	});
 	public static RegistryObject<Item> singularityNetherite = ITEMS.register("singularity_netherite", () -> {
-		return new Singularity(Blocks.NETHERITE_BLOCK);
+		return new Singularity(0x4c4143, 0x4d494d);
 	});
 	public static RegistryObject<Item> singularityEmerald = ITEMS.register("singularity_emerald", () -> {
-		return new Singularity(Blocks.EMERALD_BLOCK);
+		return new Singularity(0x82f6ad, Blocks.EMERALD_BLOCK.getMaterialColor().colorValue);
 	});
 	public static RegistryObject<Item> singularityLapis = ITEMS.register("singularity_lapis", () -> {
-		return new Singularity(Blocks.LAPIS_BLOCK);
+		return new Singularity(0x31618b, Blocks.LAPIS_BLOCK.getMaterialColor().colorValue);
 	});
 	public static RegistryObject<Item> singularityRedstone = ITEMS.register("singularity_redstone", () -> {
-		return new Singularity(Blocks.REDSTONE_BLOCK);
+		return new Singularity(0xbd2008, Blocks.REDSTONE_BLOCK.getMaterialColor().colorValue);
 	});
 	public static RegistryObject<Item> singularityQuartz = ITEMS.register("singularity_quartz", () -> {
-		return new Singularity(Blocks.QUARTZ_BLOCK);
+		return new Singularity(0xeee6de, Blocks.QUARTZ_BLOCK.getMaterialColor().colorValue);
 	});
 	public static RegistryObject<Item> diamondLattice = ITEMS.register("diamond_lattice", OrdinaryItem::new);
 	public static RegistryObject<Item> crystalMatrixIngot = ITEMS.register("crystal_matrix_ingot", OrdinaryItem::new);
@@ -62,7 +62,7 @@ public class ItemRegistry {
 	public static RegistryObject<Item> infinityCatalyst = ITEMS.register("infinity_catalyst", OrdinaryItem::new);
 	public static RegistryObject<Item> infinityIngot = ITEMS.register("infinity_ingot", OrdinaryItem::new);
 	public static RegistryObject<Item> recordFragment = ITEMS.register("record_fragment", OrdinaryItem::new);
-	public static RegistryObject<Item> matterCluster = ITEMS.register("mattercluster", OrdinaryItem::new);
+	public static RegistryObject<Item> matterCluster = ITEMS.register("mattercluster", MatterCluster::new);
 
 	//工具
 	public static RegistryObject<Item> infinityPickaxe = ITEMS.register("infinity_pickaxe", InfinityPickaxe::new);

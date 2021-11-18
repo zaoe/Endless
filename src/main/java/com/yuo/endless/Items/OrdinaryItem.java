@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -30,5 +31,34 @@ public class OrdinaryItem extends Item{
 	@Override
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
 		Item item = stack.getItem();
+		if (item == ItemRegistry.crystalMatrixIngot.get()){
+			tooltip.add(new TranslationTextComponent("endless.text.itemInfo.crystal_matrix_ingot"));
+		}
+		if (item == ItemRegistry.neutronPile.get()){
+			tooltip.add(new TranslationTextComponent("endless.text.itemInfo.neutron_pile"));
+		}
+		if (item == ItemRegistry.neutronNugget.get()){
+			tooltip.add(new TranslationTextComponent("endless.text.itemInfo.neutron_nugget"));
+		}
+		if (item == ItemRegistry.neutroniumIngot.get()){
+			tooltip.add(new TranslationTextComponent("endless.text.itemInfo.neutronium_ingot"));
+		}
+		if (item == ItemRegistry.infinityCatalyst.get()){
+			tooltip.add(new TranslationTextComponent("endless.text.itemInfo.infinity_catalyst"));
+		}
+		if (item == ItemRegistry.infinityIngot.get()){
+			tooltip.add(new TranslationTextComponent("endless.text.itemInfo.infinity_ingot"));
+		}
+		if (item == ItemRegistry.recordFragment.get()){
+			tooltip.add(new TranslationTextComponent("endless.text.itemInfo.record_fragment"));
+		}
+		if (item == ItemRegistry.skullfireSword.get()){
+			tooltip.add(new TranslationTextComponent("endless.text.itemInfo.skullfire_sword"));
+		}
+		if (item == ItemRegistry.matterCluster.get()){
+			tooltip.add(new TranslationTextComponent("endless.text.itemInfo.matter_cluster"));
+			tooltip.add(new TranslationTextComponent("endless.text.itemInfo.matter_cluster1"));
+			tooltip.add(new TranslationTextComponent("endless.text.itemInfo.matter_cluster2"));
+		}
 	}
 }
