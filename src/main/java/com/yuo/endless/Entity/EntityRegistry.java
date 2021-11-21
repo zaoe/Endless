@@ -13,6 +13,18 @@ public class EntityRegistry {
     //箭
     public static RegistryObject<EntityType<InfinityArrowEntity>> INFINITY_ARROW = ENTITY_TYPES.register("infinity_arrow", () -> {
         return EntityType.Builder.<InfinityArrowEntity>create(InfinityArrowEntity::new, EntityClassification.MISC)
-                .size(0.5f, 0.5F).build("iron_arrow");
+                .size(0.5f, 0.5F).build("infinity_arrow");
+    });
+    public static RegistryObject<EntityType<InfinityArrowSubEntity>> INFINITY_ARROW_SUB = ENTITY_TYPES.register("infinity_arrow_sub", () -> {
+        return EntityType.Builder.<InfinityArrowSubEntity>create(InfinityArrowSubEntity::new, EntityClassification.MISC)
+                .size(0.5f, 0.5F).build("infinity_arrow_sub");
+    });
+    public static RegistryObject<EntityType<EndestPearlEntity>> ENDEST_PEARL = ENTITY_TYPES.register("endest_pearl", () -> {
+        return EntityType.Builder.<EndestPearlEntity>create(EndestPearlEntity::new, EntityClassification.MISC)
+                .size(0.5f, 0.5F).build("endest_pearl");
+    });
+    public static RegistryObject<EntityType<GapingVoidEntity>> GAPING_VOID = ENTITY_TYPES.register("gaping_void", () -> {
+        return EntityType.Builder.<GapingVoidEntity>create(GapingVoidEntity::new, EntityClassification.MISC)
+                .size(0.5f, 0.5F).build("gaping_void");
     });
 }

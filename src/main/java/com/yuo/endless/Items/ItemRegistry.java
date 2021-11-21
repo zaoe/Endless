@@ -58,7 +58,7 @@ public class ItemRegistry {
 	public static RegistryObject<Item> neutronPile = ITEMS.register("neutron_pile", OrdinaryItem::new);
 	public static RegistryObject<Item> neutronNugget = ITEMS.register("neutron_nugget", OrdinaryItem::new);
 	public static RegistryObject<Item> neutroniumIngot = ITEMS.register("neutronium_ingot", OrdinaryItem::new);
-	public static RegistryObject<Item> endestPearl = ITEMS.register("endestpearl", OrdinaryItem::new);
+	public static RegistryObject<Item> endestPearl = ITEMS.register("endestpearl", EndestPearl::new);
 	public static RegistryObject<Item> infinityCatalyst = ITEMS.register("infinity_catalyst", OrdinaryItem::new);
 	public static RegistryObject<Item> infinityIngot = ITEMS.register("infinity_ingot", OrdinaryItem::new);
 	public static RegistryObject<Item> recordFragment = ITEMS.register("record_fragment", OrdinaryItem::new);

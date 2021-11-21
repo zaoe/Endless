@@ -3,22 +3,28 @@ package com.yuo.endless;
 import com.yuo.endless.Blocks.BlockRegistry;
 import com.yuo.endless.Container.ContainerTypeRegistry;
 import com.yuo.endless.Entity.EntityRegistry;
+import com.yuo.endless.Entity.GapingVooidRender;
+import com.yuo.endless.Entity.InfinityArrowRender;
+import com.yuo.endless.Entity.InfinityArrowSubRender;
 import com.yuo.endless.Gui.ExtremeCraftScreen;
 import com.yuo.endless.Gui.NeutronCollectorScreen;
 import com.yuo.endless.Gui.NeutroniumCompressorScreen;
 import com.yuo.endless.Items.ItemRegistry;
 import com.yuo.endless.Items.Singularity;
 import com.yuo.endless.Recipe.RecipeSerializerRegistry;
+import com.yuo.endless.Sound.ModSounds;
 import com.yuo.endless.Tiles.TileTypeRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.entity.SpriteRenderer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -40,6 +46,7 @@ public class Endless {
         TileTypeRegistry.TILE_ENTITIES.register(modEventBus);
         ContainerTypeRegistry.CONTAINERS.register(modEventBus);
         RecipeSerializerRegistry.RECIPE_TYPES.register(modEventBus);
+        ModSounds.SOUNDS.register(modEventBus);
     }
 
 //    @SubscribeEvent
@@ -50,7 +57,6 @@ public class Endless {
 
     @SubscribeEvent
     public void clientSetup(final FMLClientSetupEvent event) {
-        registerEntityRender(event.getMinecraftSupplier()); //注册客户端渲染
         event.enqueueWork(() ->{
             setBowProperty(ItemRegistry.infinityBow.get());
             setInfinityToolProperty(ItemRegistry.infinityPickaxe.get(), "hammer");
@@ -62,9 +68,10 @@ public class Endless {
             ScreenManager.registerFactory(ContainerTypeRegistry.neutronCollectorContainer.get(), NeutronCollectorScreen::new);
             ScreenManager.registerFactory(ContainerTypeRegistry.neutroniumCompressorContainer.get(), NeutroniumCompressorScreen::new);
         });
+        registerEntityRender(event.getMinecraftSupplier()); //注册客户端渲染
     }
 
-    //使用动态属性来切换无尽镐形态
+    //使用动态属性来切换无尽镐，铲形态
     private void setInfinityToolProperty(Item item, String prop) {
         ItemModelsProperties.registerProperty(item, new ResourceLocation(Endless.MODID,
                 prop), (itemStack, clientWorld, livingEntity) -> {
@@ -80,6 +87,10 @@ public class Endless {
 
     private void registerEntityRender(Supplier<Minecraft> minecraft){
         ItemRenderer renderer = minecraft.get().getItemRenderer();
+        RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.ENDEST_PEARL.get(), manager -> new SpriteRenderer<>(manager, renderer)); //投掷物渲染
+        RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.INFINITY_ARROW.get(), manager -> new InfinityArrowRender(manager));
+        RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.INFINITY_ARROW_SUB.get(), manager -> new InfinityArrowSubRender(manager));
+        RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.GAPING_VOID.get(), manager -> new GapingVooidRender(manager)); //渲染实体
     }
 
     //注册物品染色

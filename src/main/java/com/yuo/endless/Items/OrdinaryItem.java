@@ -52,13 +52,5 @@ public class OrdinaryItem extends Item{
 		if (item == ItemRegistry.recordFragment.get()){
 			tooltip.add(new TranslationTextComponent("endless.text.itemInfo.record_fragment"));
 		}
-		if (item == ItemRegistry.skullfireSword.get()){
-			tooltip.add(new TranslationTextComponent("endless.text.itemInfo.skullfire_sword"));
-		}
-		if (item == ItemRegistry.matterCluster.get()){
-			tooltip.add(new TranslationTextComponent("endless.text.itemInfo.matter_cluster"));
-			tooltip.add(new TranslationTextComponent("endless.text.itemInfo.matter_cluster1"));
-			tooltip.add(new TranslationTextComponent("endless.text.itemInfo.matter_cluster2"));
-		}
 	}
 }

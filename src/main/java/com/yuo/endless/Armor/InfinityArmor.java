@@ -12,10 +12,13 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -32,7 +35,6 @@ import java.util.List;
 public class InfinityArmor extends ArmorItem{
 
 	private static Properties properties = new Properties().maxStackSize(1).group(ModGroup.myGroup);
-	public static boolean FLAG = false;
 
 	public InfinityArmor(EquipmentSlotType slot) {
 		super(MyArmorMaterial.INFINITY, slot, properties);
@@ -57,7 +59,8 @@ public class InfinityArmor extends ArmorItem{
 						player.setAir(300);
 					}
 					player.getFoodStats().addStats(20, 20f); //饱腹
-					player.addPotionEffect(new EffectInstance(Effects.NIGHT_VISION, 300, 0)); //夜视
+					if (next.hasTag() && next.getTag().getBoolean("flag"))
+						player.addPotionEffect(new EffectInstance(Effects.NIGHT_VISION, 300, 0)); //夜视
 				}
 				if (item.equals(ItemRegistry.infinityChest.get())){
 					//清除所有负面效果
@@ -70,7 +73,8 @@ public class InfinityArmor extends ArmorItem{
 						});
 						if (bad.size() > 0){
 							bad.forEach((e) ->{
-								player.removeActivePotionEffect(e);
+//								player.removeActivePotionEffect(e);
+								player.clearActivePotions();
 							});
 						}
 					}
@@ -80,12 +84,22 @@ public class InfinityArmor extends ArmorItem{
 					player.isImmuneToFire(); //免疫火伤
 				}
 			}
-			if (!(next.getItem() instanceof InfinityArmor)){
-				FLAG = false;
-				continue;
-			}
-			FLAG = true;
 		}
+	}
+
+	@Override
+	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) { //切换无尽装备模式
+		ItemStack stack = playerIn.getHeldItem(handIn);
+		if (!worldIn.isRemote && playerIn.isSneaking()){
+			CompoundNBT tags = stack.getTag();
+			if (tags == null) {
+				tags = new CompoundNBT();
+				stack.setTag(tags);
+			}
+			tags.putBoolean("flag", !tags.getBoolean("flag"));
+			playerIn.swingArm(handIn); //摆臂
+		}
+		return ActionResult.resultSuccess(stack);
 	}
 
 	//获取盔甲贴图纹理
@@ -131,18 +145,26 @@ public class InfinityArmor extends ArmorItem{
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
 		if (slot == EquipmentSlotType.HEAD) {
 			tooltip.add(new TranslationTextComponent("endless.text.itemInfo.infinity_head"));
+			if (stack.hasTag() && stack.getTag().getBoolean("flag"))
+				tooltip.add(new TranslationTextComponent("endless.text.itemInfo.infinity_head1"));
 		}
 		if (slot == EquipmentSlotType.CHEST) {
 			tooltip.add(new TranslationTextComponent("endless.text.itemInfo.infinity_chest"));
-			tooltip.add(new StringTextComponent(TextFormatting.BLUE + "+" + TextFormatting.ITALIC + "100" + TextFormatting.RESET + "" + TextFormatting.BLUE + "% FlySpeed"));
+			if (stack.hasTag() && stack.getTag().getBoolean("flag"))
+				tooltip.add(new StringTextComponent(TextFormatting.BLUE + "+" + TextFormatting.ITALIC + "100" +
+						TextFormatting.RESET + "" + TextFormatting.BLUE + "% FlySpeed"));
 		}
 		if (slot == EquipmentSlotType.LEGS) {
 			tooltip.add(new TranslationTextComponent("endless.text.itemInfo.infinity_legs"));
-			tooltip.add(new StringTextComponent(TextFormatting.BLUE + "+" + TextFormatting.ITALIC + "300" + TextFormatting.RESET + "" + TextFormatting.BLUE + "% WalkSpeed"));
+			if (stack.hasTag() && stack.getTag().getBoolean("flag"))
+				tooltip.add(new StringTextComponent(TextFormatting.BLUE + "+" + TextFormatting.ITALIC + "300" +
+						TextFormatting.RESET + "" + TextFormatting.BLUE + "% WalkSpeed"));
 		}
 		if (slot == EquipmentSlotType.FEET) {
 			tooltip.add(new TranslationTextComponent("endless.text.itemInfo.infinity_feet"));
-			tooltip.add(new StringTextComponent(TextFormatting.BLUE + "+" + TextFormatting.ITALIC + "400" + TextFormatting.RESET + "" + TextFormatting.BLUE + "% JumpHeight"));
+			if (stack.hasTag() && stack.getTag().getBoolean("flag"))
+				tooltip.add(new StringTextComponent(TextFormatting.BLUE + "+" + TextFormatting.ITALIC + "400" +
+						TextFormatting.RESET + "" + TextFormatting.BLUE + "% JumpHeight"));
 		}
 
 	}
