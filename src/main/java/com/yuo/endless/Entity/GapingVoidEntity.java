@@ -1,7 +1,5 @@
 package com.yuo.endless.Entity;
 
-import codechicken.lib.vec.Cuboid6;
-import codechicken.lib.vec.Vector3;
 import com.google.common.base.Predicate;
 import com.mojang.authlib.GameProfile;
 import com.yuo.endless.Items.Tool.EndlessItemEntity;
@@ -23,6 +21,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.Explosion;
@@ -37,7 +36,6 @@ import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 
 //黑洞实体
@@ -45,16 +43,14 @@ public class GapingVoidEntity extends Entity {
     private GameProfile FAKE = new GameProfile(UUID.fromString("32283731-bbef-487c-bb69-c7e32f84ed27"), "[Endless]");
 
     public static final DataParameter<Integer> AGE_PARAMETER = EntityDataManager.createKey(GapingVoidEntity.class, DataSerializers.VARINT);
-    private static Random random = new Random();
     public static final int maxLifetime = 186; //存在时间
-    public static double collapse = .95; //坍塌
+    public static double collapse = 0.95; //坍塌系数
     public static double suckRange = 20.0; //引力范围
     private FakePlayer fakePlayer; //模拟玩家
     private LivingEntity useEntity;
     public GapingVoidEntity(EntityType<?> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
         this.isImmuneToFire();
-//        setSize(0.1F, 0.1F);
         ignoreFrustumCheck = true;
         if (world instanceof ServerWorld) {
             fakePlayer = FakePlayerFactory.get((ServerWorld) world, FAKE);
@@ -63,7 +59,6 @@ public class GapingVoidEntity extends Entity {
     public GapingVoidEntity(EntityType<?> entityTypeIn,LivingEntity living ,World worldIn) {
         super(entityTypeIn, worldIn);
         this.isImmuneToFire();
-//        setSize(0.1F, 0.1F);
         ignoreFrustumCheck = true;
         if (world instanceof ServerWorld) {
             fakePlayer = FakePlayerFactory.get((ServerWorld) world, FAKE);
@@ -135,15 +130,14 @@ public class GapingVoidEntity extends Entity {
         double posX = this.getPosX();
         double posY = this.getPosY();
         double posZ = this.getPosZ();
+        BlockPos position = this.getPosition();
         int age = getAge();
 
         if (age >= maxLifetime && !world.isRemote) { //死亡时发生爆炸
             world.createExplosion(this, posX, posY, posZ, 6.0f, true, Explosion.Mode.BREAK);
-            double nomrange = getVoidScale(age) * 0.95;
-            Cuboid6 add = new Cuboid6().add(Vector3.fromEntity(this));
-            add.expand(nomrange);
-//            AxisAlignedBB axisAlignedBB = new AxisAlignedBB(this.getPosition().add(-4, -4, -4), this.getPosition().add(4,4,4));
-            List<Entity> nommed = world.getEntitiesWithinAABB(LivingEntity.class, add.aabb(), OMNOM_PREDICATE);
+            double range = 4;
+            AxisAlignedBB axisAlignedBB = new AxisAlignedBB(position.add(-range, -range, -range), position.add(range,range,range));
+            List<Entity> nommed = world.getEntitiesWithinAABB(LivingEntity.class, axisAlignedBB, OMNOM_PREDICATE);
             //最后给予生物高额伤害
             for (Entity nommee : nommed) {
                 if (nommee != this) {
@@ -161,9 +155,15 @@ public class GapingVoidEntity extends Entity {
             setDead();
         } else {
             if (age == 0) { //生成实体时播放音效
-                world.playSound( null, this.getPosition(), ModSounds.GAPING_VOID.get(), SoundCategory.HOSTILE, 8.0F, 1.0F);
+                world.playSound( null, position, ModSounds.GAPING_VOID.get(), SoundCategory.HOSTILE, 8.0F, 1.0F);
             }
             setAge(age + 1); //年龄增加
+        }
+
+        //生成粒子
+        for (int i = 0; i < 50; i++){
+            world.addParticle(ParticleTypes.PORTAL, position.getX(), position.getY(), position.getZ(), rand.nextGaussian() * 3,
+                    rand.nextGaussian() * 3, rand.nextGaussian() * 3);
         }
 
         if (world.isRemote) {
@@ -173,27 +173,12 @@ public class GapingVoidEntity extends Entity {
             setDead();
             return;
         }
-        Vector3 pos = Vector3.fromEntity(this);
-        double particlespeed = 4.5; //粒子速度
 
-        double size = getVoidScale(age) * 0.5 - 0.2;
-        for (int i = 0; i < 50; i++) {
-            Vector3 particlePos = new Vector3(0, 0, size);
-            particlePos.rotate(random.nextFloat() * 180f, new Vector3(0, 1, 0));
-            particlePos.rotate(random.nextFloat() * 360f, new Vector3(1, 0, 0));
-
-            Vector3 velocity = particlePos.copy().normalize();
-            velocity.multiply(particlespeed);
-            particlePos.add(pos);
-            //传送门紫色粒子
-            world.addParticle(ParticleTypes.PORTAL, particlePos.x, particlePos.y, particlePos.z, velocity.x, velocity.y, velocity.z);
-        }
-
-        // *slurping noises*
-        Cuboid6 cuboid = new Cuboid6().add(pos);
-        cuboid.expand(suckRange);
-        List<Entity> sucked = world.getEntitiesWithinAABB(Entity.class, cuboid.aabb(), SUCK_PREDICATE); //获取引力范围内所以实体
+        //引力
         double radius = getVoidScale(age) * 0.5;
+        double range = radius * suckRange;
+        AxisAlignedBB axisAlignedBB = new AxisAlignedBB(position.add(-range, -range, -range), position.add(range,range,range));
+        List<Entity> sucked = world.getEntitiesWithinAABB(Entity.class, axisAlignedBB, SUCK_PREDICATE); //获取引力范围内所以实体
         for (Entity suckee : sucked) { //将所以实体吸引到此实体处
             if (suckee != this) {
                 double dx = posX - suckee.getPosX();
@@ -212,25 +197,21 @@ public class GapingVoidEntity extends Entity {
                     double motionX = motion.x + (dx / len) * strength * power;
                     double motionY = motion.y + (dy / len) * strength * power;
                     double motionZ = motion.z + (dz / len) * strength * power;
-//                    if (suckee instanceof PlayerEntity) {
-//                        PlayerEntity player = (PlayerEntity) suckee;
-//                        player.moveForced(this.getPositionVec());
-//                    } else
-                        suckee.setMotion(motionX, motionY, motionZ); //移动实体
+                    suckee.setMotion(motionX, motionY, motionZ); //移动实体
                 }
             }
         }
 
+        //伤害
         double nomrange = radius * 0.95;
-        cuboid = new Cuboid6().add(pos);
-        cuboid.expand(nomrange);
-        List<Entity> nommed = world.getEntitiesWithinAABB(LivingEntity.class, cuboid.aabb(), OMNOM_PREDICATE);
+        AxisAlignedBB alignedBB = new AxisAlignedBB(position.add(-nomrange, -nomrange, -nomrange), position.add(nomrange,nomrange,nomrange));
+        List<Entity> nommed = world.getEntitiesWithinAABB(LivingEntity.class, alignedBB, OMNOM_PREDICATE);
         //给所以被吸引到近处的实体掉出世界伤害
         for (Entity nommee : nommed) {
             if (nommee != this) {
-                Vector3 nomedPos = Vector3.fromEntity(nommee);
-                Vector3 diff = pos.copy().subtract(nomedPos);
-                double len = diff.mag();
+                Vector3d nomedPos = nommee.getLookVec();
+                Vector3d diff = this.getPositionVec().subtract(nomedPos);
+                double len = diff.length();
                 if (len <= nomrange) {
                     if (nommee instanceof EnderDragonEntity){
                         EnderDragonEntity dragon = (EnderDragonEntity) nommee;
@@ -243,22 +224,22 @@ public class GapingVoidEntity extends Entity {
 
         // 每半秒破坏一次方块
         if (age % 10 == 0) {
-            Vector3 posFloor = pos.copy().floor();
+            Vector3d posFloor = this.getPositionVec();
 
             int blockrange = (int) Math.round(nomrange);
 
             for (int y = -blockrange; y <= blockrange; y++) {
                 for (int z = -blockrange; z <= blockrange; z++) {
                     for (int x = -blockrange; x <= blockrange; x++) {
-                        Vector3 pos2 = new Vector3(x, y, z);
-                        Vector3 rPos = posFloor.copy().add(pos2);
-                        BlockPos blockPos = rPos.pos();
+                        Vector3d pos2 = new Vector3d(x, y, z);
+                        Vector3d rPos = posFloor.add(pos2);
+                        BlockPos blockPos = new BlockPos(rPos);
 
                         if (blockPos.getY() < 0 || blockPos.getY() > 255) {
                             continue;
                         }
 
-                        double dist = pos2.mag();
+                        double dist = pos2.lengthSquared();
                         if (dist <= nomrange && !world.isAirBlock(blockPos)) {
                             BlockState state = world.getBlockState(blockPos);
                             BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(world, blockPos, state, fakePlayer);

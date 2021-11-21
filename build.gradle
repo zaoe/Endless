@@ -92,17 +92,17 @@ repositories {
         name = "JEI"
         url = "http://dvs1.progwml6.com/files/maven"
     }
-    maven {
-        url = "https://chickenbones.net/maven"
-    }
+//    maven {
+//        url = "https://chickenbones.net/maven"
+//    }
 }
 dependencies {
     minecraft 'net.minecraftforge:forge:1.16.4-35.1.4'
 
     compile "mezz.jei:jei-1.16.4:7.6.1.73" //引入mod API
-    compile "codechicken:CodeChickenLib:1.16.4-3.5.1.+:deobf"
+//    compile "codechicken:CodeChickenLib:1.16.4-3.5.1.+:deobf"
     runtimeOnly fg.deobf("curse.maven:jei-238222:3245003") //引入mod
-    runtimeOnly fg.deobf("curse.maven:codechicken-242818:3151166") //引入mod
+//    runtimeOnly fg.deobf("curse.maven:codechicken-242818:3151166") //引入mod
 }
 
 jar {

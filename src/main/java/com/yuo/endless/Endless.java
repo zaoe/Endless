@@ -3,7 +3,7 @@ package com.yuo.endless;
 import com.yuo.endless.Blocks.BlockRegistry;
 import com.yuo.endless.Container.ContainerTypeRegistry;
 import com.yuo.endless.Entity.EntityRegistry;
-import com.yuo.endless.Entity.GapingVooidRender;
+import com.yuo.endless.Entity.GapingVoidRender;
 import com.yuo.endless.Entity.InfinityArrowRender;
 import com.yuo.endless.Entity.InfinityArrowSubRender;
 import com.yuo.endless.Gui.ExtremeCraftScreen;
@@ -90,7 +90,7 @@ public class Endless {
         RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.ENDEST_PEARL.get(), manager -> new SpriteRenderer<>(manager, renderer)); //投掷物渲染
         RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.INFINITY_ARROW.get(), manager -> new InfinityArrowRender(manager));
         RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.INFINITY_ARROW_SUB.get(), manager -> new InfinityArrowSubRender(manager));
-        RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.GAPING_VOID.get(), manager -> new GapingVooidRender(manager)); //渲染实体
+        RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.GAPING_VOID.get(), manager -> new GapingVoidRender(manager)); //渲染实体
     }
 
     //注册物品染色

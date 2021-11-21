@@ -11,12 +11,12 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 
-public class GapingVooidRender extends EntityRenderer<GapingVoidEntity> {
+public class GapingVoidRender extends EntityRenderer<GapingVoidEntity> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(Endless.MODID, "textures/entity/void.png");
 
     private EntityModel<Entity> gapingVoid;
 
-    public GapingVooidRender(EntityRendererManager renderManagerIn) {
+    public GapingVoidRender(EntityRendererManager renderManagerIn) {
         super(renderManagerIn);
         this.gapingVoid = new GapingVoidModel();
     }

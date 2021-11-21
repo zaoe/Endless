@@ -1,6 +1,5 @@
 package com.yuo.endless.Entity;
 
-import codechicken.lib.vec.Vector3;
 import com.yuo.endless.Items.ItemRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -14,6 +13,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 
@@ -65,9 +65,9 @@ public class EndestPearlEntity extends ProjectileItemEntity {
                 voidEntity = new GapingVoidEntity(EntityRegistry.GAPING_VOID.get(), shooter ,world);
             }else voidEntity = new GapingVoidEntity(EntityRegistry.GAPING_VOID.get(), world); //生成黑洞实体
             Direction facing = entity.getHorizontalFacing();
-            Vector3 offset = Vector3.ZERO.copy();
+            Vector3d offset = Vector3d.ZERO;
             if (facing != null){
-                offset = new Vector3(facing.getXOffset(), facing.getYOffset(), facing.getZOffset());
+                offset = new Vector3d(facing.getXOffset(), facing.getYOffset(), facing.getZOffset());
             }
             voidEntity.setLocationAndAngles(entity.getPosX() + offset.x * 0.25, entity.getPosY() + offset.y * 0.25, entity.getPosZ() + offset.z * 0.25, rotationYaw, 0.0F);
             world.addEntity(voidEntity);
@@ -89,9 +89,9 @@ public class EndestPearlEntity extends ProjectileItemEntity {
                 voidEntity = new GapingVoidEntity(EntityRegistry.GAPING_VOID.get(), shooter ,world);
             }else voidEntity = new GapingVoidEntity(EntityRegistry.GAPING_VOID.get(), world);
             Direction facing = result.getFace();
-            Vector3 offset = Vector3.ZERO.copy();
+            Vector3d offset = Vector3d.ZERO;
             if (facing != null){
-                offset = new Vector3(facing.getXOffset(), facing.getYOffset(), facing.getZOffset());
+                offset = new Vector3d(facing.getXOffset(), facing.getYOffset(), facing.getZOffset());
             }
             voidEntity.setLocationAndAngles(pos.getX() + offset.x * 0.25, pos.getY() + offset.y * 0.25, pos.getZ() + offset.z * 0.25, rotationYaw, 0.0F);
             world.addEntity(voidEntity);
