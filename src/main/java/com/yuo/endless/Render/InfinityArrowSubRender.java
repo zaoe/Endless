@@ -1,4 +1,4 @@
-package com.yuo.endless.Entity;
+package com.yuo.endless.Render;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.yuo.endless.Endless;

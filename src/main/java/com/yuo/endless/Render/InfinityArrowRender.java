@@ -1,4 +1,4 @@
-package com.yuo.endless.Entity;
+package com.yuo.endless.Render;
 
 import net.minecraft.client.renderer.entity.ArrowRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;

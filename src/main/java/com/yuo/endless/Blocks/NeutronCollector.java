@@ -28,7 +28,7 @@ public class NeutronCollector extends ContainerBlock {
 
     public NeutronCollector() {
         super(Properties.create(Material.ROCK).hardnessAndResistance(10, 50).harvestLevel(1)
-                .harvestTool(ToolType.PICKAXE));
+                .harvestTool(ToolType.PICKAXE).setRequiresTool());
         this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH));
     }
 

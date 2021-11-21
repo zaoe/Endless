@@ -32,7 +32,7 @@ public class ExtremeCraft extends ContainerBlock {
 
     public ExtremeCraft() {
         super(Properties.create(Material.ROCK).hardnessAndResistance(10, 50).harvestLevel(1)
-                .harvestTool(ToolType.PICKAXE).sound(SoundType.GLASS));
+                .harvestTool(ToolType.PICKAXE).sound(SoundType.GLASS).setRequiresTool());
     }
 
     @Override

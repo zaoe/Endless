@@ -1,8 +1,10 @@
-package com.yuo.endless.Entity;
+package com.yuo.endless.Render;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.yuo.endless.Endless;
+import com.yuo.endless.Entity.GapingVoidEntity;
+import com.yuo.endless.Entity.GapingVoidModel;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;

@@ -4,6 +4,7 @@ import com.yuo.endless.Armor.InfinityArmor;
 import com.yuo.endless.Endless;
 import com.yuo.endless.Items.ItemRegistry;
 import com.yuo.endless.Items.Tool.*;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -20,6 +21,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.item.ItemEvent;
@@ -29,10 +31,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 事件处理类
@@ -52,19 +51,6 @@ public class EventHandler {
             PlayerEntity player = (PlayerEntity)living;
             String key = player.getGameProfile().getName()+":"+player.world.isRemote;
             if (playersWithFeet.contains(key)) {
-                event.setCanceled(true);
-            }
-        }
-    }
-
-    //无尽护腿火焰免疫
-    @SubscribeEvent
-    public static void legsFireImmune(LivingAttackEvent event){
-        LivingEntity entityLiving = event.getEntityLiving();
-        if (entityLiving instanceof PlayerEntity){
-            PlayerEntity player = (PlayerEntity) entityLiving;
-            String key = player.getGameProfile().getName()+":"+player.world.isRemote;
-            if (event.getSource().isFireDamage() && playersWithLegs.contains(key)){
                 event.setCanceled(true);
             }
         }
@@ -230,6 +216,10 @@ public class EventHandler {
                 world.setBlockState(pos, Blocks.AIR.getDefaultState());
             }
         }
+        if (stack.getItem() == ItemRegistry.infinityIngot.get()){
+            BlockState state = world.getBlockState(pos);
+            player.sendMessage(new TranslationTextComponent("方块信息：" + state.getHarvestLevel()), UUID.randomUUID());
+        }
     }
 
     @SubscribeEvent
@@ -253,6 +243,18 @@ public class EventHandler {
                     event.setNewSpeed(event.getNewSpeed() * 2);
                 }
             }
+        }
+    }
+    @SubscribeEvent
+    public static void hav(PlayerEvent.HarvestCheck event){
+        LivingEntity living = event.getEntityLiving();
+        if (living instanceof PlayerEntity){
+            PlayerEntity player = (PlayerEntity) living;
+            ItemStack heldItem = player.getHeldItem(Hand.MAIN_HAND);
+            BlockState targetBlock = event.getTargetBlock();
+            boolean b = event.canHarvest();
+            player.sendMessage(new TranslationTextComponent(heldItem.getDisplayName().getString() + " : "+
+                    targetBlock.getBlock().getTranslatedName().getString() + " : " + b), UUID.randomUUID());
         }
     }
 
@@ -283,6 +285,10 @@ public class EventHandler {
         }
         PlayerEntity player = (PlayerEntity) event.getEntityLiving();
         if (isInfinite(player) && !(event.getSource()instanceof InfinityDamageSource)) {
+            event.setCanceled(true);
+        }
+        String key = player.getGameProfile().getName()+":"+player.world.isRemote;
+        if (event.getSource().isFireDamage() && playersWithLegs.contains(key)){
             event.setCanceled(true);
         }
     }
