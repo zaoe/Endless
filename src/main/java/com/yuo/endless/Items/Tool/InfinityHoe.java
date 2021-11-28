@@ -169,16 +169,9 @@ public class InfinityHoe extends HoeItem {
     }
 
     @Override
-    public boolean hasEffect(ItemStack stack) {
-        return false;
+    public int getItemEnchantability() {
+        return 0;
     }
-
-    //是否允许铁砧附魔
-    @Override
-    public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
-        return false;
-    }
-
     @Override
     public boolean isDamageable() {
         return false;

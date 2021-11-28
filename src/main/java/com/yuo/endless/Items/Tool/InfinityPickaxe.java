@@ -107,6 +107,11 @@ public class InfinityPickaxe extends PickaxeItem {
     }
 
     @Override
+    public int getItemEnchantability() {
+        return 0;
+    }
+
+    @Override
     public boolean hasEffect(ItemStack stack) {
         return false;
     }

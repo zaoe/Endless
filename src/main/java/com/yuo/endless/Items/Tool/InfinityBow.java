@@ -70,14 +70,8 @@ public class InfinityBow extends BowItem {
     }
 
     @Override
-    public boolean hasEffect(ItemStack stack) {
-        return false;
-    }
-
-    //是否允许铁砧附魔
-    @Override
-    public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
-        return false;
+    public int getItemEnchantability() {
+        return 0;
     }
 
     @Override
