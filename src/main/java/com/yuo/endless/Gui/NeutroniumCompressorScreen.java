@@ -38,8 +38,9 @@ public class NeutroniumCompressorScreen extends ContainerScreen<NeutroniumCompre
     @Override
     protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack, int x, int y) {
         super.drawGuiContainerForegroundLayer(matrixStack, x, y);
-        drawString(matrixStack, font, Integer.toString(this.container.getNumber()), 39, 54, 0x696969 );
+        drawString(matrixStack, font, this.container.getNumber() + "/" + this.container.getCount(), 39, 54, 0x696969 );
     }
+
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(matrixStack);

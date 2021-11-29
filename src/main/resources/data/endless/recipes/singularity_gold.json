@@ -3,7 +3,7 @@
   "input": {
     "item": "minecraft:gold_block"
   },
-  "count": 600,
+  "count": 400,
   "output": {
     "item": "endless:singularity_gold"
   }

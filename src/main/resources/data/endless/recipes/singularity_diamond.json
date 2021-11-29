@@ -3,7 +3,7 @@
   "input": {
     "item": "minecraft:diamond_block"
   },
-  "count": 500,
+  "count": 300,
   "output": {
     "item": "endless:singularity_diamond"
   }

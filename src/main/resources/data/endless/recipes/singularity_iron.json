@@ -3,7 +3,7 @@
   "input": {
     "item": "minecraft:iron_block"
   },
-  "count": 700,
+  "count": 450,
   "output": {
     "item": "endless:singularity_iron"
   }

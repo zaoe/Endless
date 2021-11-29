@@ -3,7 +3,7 @@
   "input": {
     "item": "minecraft:emerald_block"
   },
-  "count": 450,
+  "count": 300,
   "output": {
     "item": "endless:singularity_emerald"
   }

@@ -3,7 +3,7 @@
   "input": {
     "item": "minecraft:quartz_block"
   },
-  "count": 850,
+  "count": 450,
   "output": {
     "item": "endless:singularity_quartz"
   }

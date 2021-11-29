@@ -77,7 +77,7 @@ public class NeutroniumRecipe implements IRecipe<IInventory> {
 
     @Override
     public NonNullList<Ingredient> getIngredients() {
-        return NonNullList.withSize(1, Ingredient.fromStacks(input));
+        return NonNullList.withSize(1, Ingredient.fromStacks(new ItemStack(input.getItem(), count)));
     }
 
     @Override

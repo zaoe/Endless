@@ -24,6 +24,7 @@ import javax.annotation.Nullable;
 
 public class NeutronCollectorTile extends LockableTileEntity implements ITickableTileEntity, ISidedInventory {
     private int timer; //计时器
+    private final int TIME = 3600; //总时间
     private NonNullList<ItemStack> output = NonNullList.withSize(1, ItemStack.EMPTY); //输出栏
     private final NCIntArray data = new NCIntArray();
 
@@ -37,7 +38,7 @@ public class NeutronCollectorTile extends LockableTileEntity implements ITickabl
         this.timer++;
         this.data.set(0, this.timer);
         if (world.isRemote || world == null) return;
-        if (this.timer >= 1200){
+        if (this.timer >= TIME){
             this.timer = 0;
             this.data.set(0, this.timer);
             ItemStack stack = this.output.get(0);

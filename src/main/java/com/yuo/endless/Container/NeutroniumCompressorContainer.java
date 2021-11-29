@@ -81,9 +81,9 @@ public class NeutroniumCompressorContainer extends Container {
     public int getNumber(){
         return this.data.get(0);
     }
-
+    //总数
+    public int getCount(){ return this.data.get(1);}
     //获取压缩进度 2种显示
     public int getProgress(){ return (int) Math.ceil(this.data.get(0) / (this.data.get(1) * 1.0) * 22);}
     public int getProgress1(){ return (int) Math.ceil(this.data.get(0) / (this.data.get(1) * 1.0) * 16);}
-
 }

@@ -3,7 +3,7 @@
   "input": {
     "item": "minecraft:redstone_block"
   },
-  "count": 800,
+  "count": 500,
   "output": {
     "item": "endless:singularity_redstone"
   }

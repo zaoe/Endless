@@ -3,7 +3,7 @@
   "input": {
     "item": "minecraft:netherite_block"
   },
-  "count": 350,
+  "count": 200,
   "output": {
     "item": "endless:singularity_netherite"
   }
