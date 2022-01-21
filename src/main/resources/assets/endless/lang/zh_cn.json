@@ -69,6 +69,9 @@
     "endless.text.itemInfo.matter_cluster2"="类物品",
     "endless.text.blockInfo.matter_cluster"="物品",
     "endless.text.blockInfo.infinity_sword"="无限",
+
+    "endless.message.login"="§b欢迎游玩本模组[无尽贪婪·伪]，问题反馈§a点击此处!",
+    "endless.message.login0"="§ahttps://space.bilibili.com/21854371",
     #GUI
     "gui.endless.extreme_craft"="无尽工作台",
     "gui.endless.neutron_collector"="中子态素收集器",

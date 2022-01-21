@@ -2,7 +2,7 @@ package com.yuo.endless.Tiles;
 
 import com.yuo.endless.Container.NeutroniumCompressorContainer;
 import com.yuo.endless.Container.NiumCIntArray;
-import com.yuo.endless.Recipe.EndlessRecipeType;
+import com.yuo.endless.Recipe.RecipeTypeRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -40,7 +40,7 @@ public class NeutroniumCompressorTile extends LockableTileEntity implements ITic
     // 0：输入，1：输出，2：正在参与合成的物品
     private NonNullList<ItemStack> items = NonNullList.withSize(3, ItemStack.EMPTY); //物品栏
     private final NiumCIntArray data = new NiumCIntArray();
-    private final IRecipeType recipeType = EndlessRecipeType.NEUTRONIUM;
+    private final IRecipeType recipeType = RecipeTypeRegistry.NEUTRONIUM_RECIPE;
     private final int[] SLOT_IN = new int[]{0};
     private final int[] SLOT_OUT = new int[]{1};
 

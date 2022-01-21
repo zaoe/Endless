@@ -3,7 +3,6 @@ package com.yuo.endless.Armor;
 import com.yuo.endless.Items.ItemRegistry;
 import com.yuo.endless.Items.Tool.EndlessItemEntity;
 import com.yuo.endless.tab.ModGroup;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.EndermanEntity;
@@ -19,7 +18,6 @@ import net.minecraft.potion.Effects;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -120,7 +118,7 @@ public class InfinityArmor extends ArmorItem{
 		return false;
 	}
 
-	private static final RenderType RENDER_TYPE = RenderType.getEyes(new ResourceLocation("textures/entity/enderman/enderman_eyes.png"));
+//	private static final RenderType RENDER_TYPE = RenderType.getEyes(new ResourceLocation("textures/entity/enderman/enderman_eyes.png"));
 
 	//渲染盔甲模型
 //	@Nullable

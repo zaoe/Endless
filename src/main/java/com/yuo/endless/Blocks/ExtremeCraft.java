@@ -16,7 +16,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
-import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
@@ -63,9 +62,10 @@ public class ExtremeCraft extends ContainerBlock {
         }
     }
 
+    @Override
     public INamedContainerProvider getContainer(BlockState state, World worldIn, BlockPos pos) {
         return new SimpleNamedContainerProvider((id, inventory, player) -> {
-            return new ExtremeCraftContainer(id, inventory, (ExtremeCraftTile) worldIn.getTileEntity(pos), IWorldPosCallable.of(worldIn, pos));
+            return new ExtremeCraftContainer(id, inventory, (ExtremeCraftTile) worldIn.getTileEntity(pos));
         }, CONTAINER_NAME);
     }
 

@@ -18,7 +18,7 @@ import net.minecraftforge.common.ToolType;
 import javax.annotation.Nullable;
 
 public class InfinityShovel extends ShovelItem {
-    private ItemHander hander;
+    private final ItemHander hander;
 
     public InfinityShovel() {
         super(MyItemTier.INFINITY_TOOL, -2, -2.8f, new Properties().group(ModGroup.myGroup).isImmuneToFire());
@@ -69,7 +69,7 @@ public class InfinityShovel extends ShovelItem {
 
     @Override
     public ActionResultType onItemUse(ItemUseContext context) {
-        if (context.getItem().getTag().getBoolean("destroyer"))
+        if (context.getItem().hasTag() && context.getItem().getTag().getBoolean("destroyer"))
             return ActionResultType.PASS; //正常形态才可以使用
         World world = context.getWorld();
         BlockPos blockpos = context.getPos();

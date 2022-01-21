@@ -1,7 +1,7 @@
 package com.yuo.endless.Container;
 
-import com.yuo.endless.Recipe.EndlessRecipeType;
 import com.yuo.endless.Recipe.ExtremeCraftRecipe;
+import com.yuo.endless.Recipe.RecipeTypeRegistry;
 import com.yuo.endless.Tiles.ExtremeCraftTile;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -9,42 +9,36 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.IRecipeHelperPopulator;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.RecipeBookContainer;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.RecipeBookCategory;
 import net.minecraft.item.crafting.RecipeItemHelper;
 import net.minecraft.network.play.server.SSetSlotPacket;
-import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.world.World;
 
-import javax.annotation.Nullable;
-import java.util.Collections;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class ExtremeCraftContainer extends RecipeBookContainer<CraftingInventory> {
 
     private ExtremeCraftInventory inputInventory;
     private ExtremeCraftInventoryResult outputInventory;
-//    private IInventory extremeCraftInventory = new Inventory(82);
-    private final IWorldPosCallable worldPosCallable;
     private final PlayerEntity player;
+    private final World world;
 
 
     public ExtremeCraftContainer(int id, PlayerInventory playerInventory){
-        this(id, playerInventory, new ExtremeCraftTile(), IWorldPosCallable.DUMMY);
+        this(id, playerInventory, new ExtremeCraftTile());
     }
 
-    public ExtremeCraftContainer(int id, PlayerInventory playerInventory, ExtremeCraftTile tile, IWorldPosCallable worldPosCallableIn) {
+    public ExtremeCraftContainer(int id, PlayerInventory playerInventory, ExtremeCraftTile tile) {
         super(ContainerTypeRegistry.extremeCraftContainer.get(), id);
         this.inputInventory = new ExtremeCraftInventory(this, tile);
         this.outputInventory = new ExtremeCraftInventoryResult(tile);
         this.player = playerInventory.player;
-        this.worldPosCallable = worldPosCallableIn;
+        this.world = playerInventory.player.world;;
         //添加9*9合成栏
         for (int m = 0; m < 9; m++){
             for (int n = 0; n < 9; n++){
@@ -70,12 +64,11 @@ public class ExtremeCraftContainer extends RecipeBookContainer<CraftingInventory
     //输入改变时设置输出
     @Override
     public void onCraftMatrixChanged(IInventory matrix) {
-        World world = player.world;
         if (world.isRemote) return;
         ServerPlayerEntity serverPlayer = (ServerPlayerEntity)player;
         ItemStack itemstack = ItemStack.EMPTY;
         //获取配方
-        Optional<ExtremeCraftRecipe> optional = world.getServer().getRecipeManager().getRecipe(EndlessRecipeType.EXTREME_CRAFT, matrix, world);
+        Optional<ExtremeCraftRecipe> optional = world.getServer().getRecipeManager().getRecipe(RecipeTypeRegistry.EXTREME_CRAFT_RECIPE, matrix, world);
         if (optional.isPresent()) {
             ExtremeCraftRecipe recipe = optional.get();
             if (outputInventory.canUseRecipe(world, serverPlayer, recipe)) {
@@ -104,9 +97,12 @@ public class ExtremeCraftContainer extends RecipeBookContainer<CraftingInventory
             ItemStack itemStack1 = slot.getStack();
             itemstack = itemStack1.copy();
             if (index == 81){
-                if (!this.mergeItemStack(itemStack1, 3, 39, true)) return ItemStack.EMPTY;
+                if (!this.mergeItemStack(itemStack1, 82, 118, true)) return ItemStack.EMPTY;
                 slot.onSlotChange(itemStack1, itemstack);
             } else if (index >= 82){
+                if (hasRecipe(itemStack1)){
+                    if (!this.mergeItemStack(itemStack1, 0, 81, false)) return ItemStack.EMPTY;
+                }
                 if (index >= 82 && index < 109) { //从物品栏到快捷栏
                     if (!this.mergeItemStack(itemStack1, 109, 118, false)) return ItemStack.EMPTY;
                 } else if (index >= 109 && index < 118 ) {
@@ -124,14 +120,15 @@ public class ExtremeCraftContainer extends RecipeBookContainer<CraftingInventory
         return itemstack;
     }
 
+    protected boolean hasRecipe(ItemStack stack) {
+        return this.world.getRecipeManager().getRecipe(RecipeTypeRegistry.EXTREME_CRAFT_RECIPE, new Inventory(stack), this.world).isPresent();
+    }
+
     @Override
     public void fillStackedContents(RecipeItemHelper itemHelperIn) {
         if (this.inputInventory instanceof IRecipeHelperPopulator) {
             ((IRecipeHelperPopulator)this.inputInventory).fillStackedContents(itemHelperIn);
         }
-//        if (this.outputInventory instanceof IRecipeHelperPopulator) {
-//            ((IRecipeHelperPopulator)this.outputInventory).fillStackedContents(itemHelperIn);
-//        }
     }
 
     @Override
@@ -170,23 +167,23 @@ public class ExtremeCraftContainer extends RecipeBookContainer<CraftingInventory
         return null;
     }
 
-    //获取配方输出
-    @Nullable
-    public ItemStack getRecipeOut(ExtremeCraftInventory inventory) {
-        Set<IRecipe<?>> recipes = findRecipesByType(EndlessRecipeType.EXTREME_CRAFT, this.player.world);
-        for (IRecipe<?> iRecipe : recipes) {
-            ExtremeCraftRecipe recipe = (ExtremeCraftRecipe) iRecipe;
-            if (recipe.matches(inventory, this.player.world)) {
-                return recipe.getRecipeOutput();
-            }
-        }
+//    //获取配方输出
+//    @Nullable
+//    public ItemStack getRecipeOut(ExtremeCraftInventory inventory) {
+//        Set<IRecipe<?>> recipes = findRecipesByType(EndlessRecipeType.EXTREME_CRAFT, this.player.world);
+//        for (IRecipe<?> iRecipe : recipes) {
+//            ExtremeCraftRecipe recipe = (ExtremeCraftRecipe) iRecipe;
+//            if (recipe.matches(inventory, this.player.world)) {
+//                return recipe.getRecipeOutput();
+//            }
+//        }
+//
+//        return ItemStack.EMPTY;
+//    }
 
-        return ItemStack.EMPTY;
-    }
-
-    public static Set<IRecipe<?>> findRecipesByType(IRecipeType<?> typeIn, World world) {
-        return world != null ? world.getRecipeManager().getRecipes().stream()
-                .filter(recipe -> recipe.getType() == typeIn).collect(Collectors.toSet()) : Collections.emptySet();
-    }
+//    public static Set<IRecipe<?>> findRecipesByType(IRecipeType<?> typeIn, World world) {
+//        return world != null ? world.getRecipeManager().getRecipes().stream()
+//                .filter(recipe -> recipe.getType() == typeIn).collect(Collectors.toSet()) : Collections.emptySet();
+//    }
 
 }

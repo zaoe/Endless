@@ -7,7 +7,6 @@ import com.yuo.endless.Blocks.BlockRegistry;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.Ingredient;
@@ -24,30 +23,34 @@ import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Set;
 
-public class ExtremeCraftRecipe implements IRecipe<IInventory> {
+public class ExtremeCraftRecipe implements IExtremeCraftRecipe {
 
     static int MAX_WIDTH = 9;
     static int MAX_HEIGHT = 9;
 
     private final int Width;
     private final int Height;
-    private final IRecipeType type;
     private final NonNullList<Ingredient> items;
     private final ItemStack result;
     private final ResourceLocation id;
 
-    public ExtremeCraftRecipe(ResourceLocation id, int WidthIn, int HeightIn, NonNullList<Ingredient> itemsIn, ItemStack result, IRecipeType typeIn){
+    public ExtremeCraftRecipe(ResourceLocation id, int WidthIn, int HeightIn, NonNullList<Ingredient> itemsIn, ItemStack result){
         this.id = id;
         this.Width = WidthIn;
         this.Height = HeightIn;
         this.items = itemsIn;
         this.result = result;
-        this.type = typeIn;
+    }
+
+    public static class RecipeType implements IRecipeType<ExtremeCraftRecipe> {
+        @Override
+        public String toString() {
+            return ExtremeCraftRecipe.TYPE_ID.toString();
+        }
     }
 
     //配方序列器
     public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<ExtremeCraftRecipe>{
-
         @Override
         public ExtremeCraftRecipe read(ResourceLocation recipeId, JsonObject json) { //从json中获取信息
             Map<String, Ingredient> map = deserializeKey(JSONUtils.getJsonObject(json, "key"));
@@ -56,11 +59,11 @@ public class ExtremeCraftRecipe implements IRecipe<IInventory> {
             int j = astring.length;
             NonNullList<Ingredient> nonnulllist = deserializeIngredients(astring, map, i, j);
             ItemStack result = deserializeItem(JSONUtils.getJsonObject(json, "result"));
-            String type = JSONUtils.getString(json, "type");
-            if (!type.equals("endless:extreme_craft")){
-                throw new IllegalStateException("Type is not found");
-            }
-            return new ExtremeCraftRecipe(recipeId, i, j, nonnulllist, result, EndlessRecipeType.EXTREME_CRAFT);
+//            String type = JSONUtils.getString(json, "type"); 联机错误1
+//            if (!type.equals("endless:extreme_craft")){
+//                throw new IllegalStateException("Type is not found");
+//            }
+            return new ExtremeCraftRecipe(recipeId, i, j, nonnulllist, result);
         }
 
         @Nullable
@@ -68,7 +71,7 @@ public class ExtremeCraftRecipe implements IRecipe<IInventory> {
         public ExtremeCraftRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
             int i = buffer.readVarInt();
             int j = buffer.readVarInt();
-            String s = buffer.readString(32767);
+//            String s = buffer.readString(32767); 联机错误2
             NonNullList<Ingredient> nonnulllist = NonNullList.withSize(i * j, Ingredient.EMPTY);
 
             for(int k = 0; k < nonnulllist.size(); ++k) {
@@ -76,11 +79,7 @@ public class ExtremeCraftRecipe implements IRecipe<IInventory> {
             }
 
             ItemStack result = buffer.readItemStack();
-            String type = buffer.readString();
-            if (!type.equals("endless:extreme_craft")){
-                throw new IllegalStateException("Type is not found");
-            }
-            return new ExtremeCraftRecipe(recipeId, i, j, nonnulllist, result, EndlessRecipeType.EXTREME_CRAFT);
+            return new ExtremeCraftRecipe(recipeId, i, j, nonnulllist, result);
         }
 
         @Override
@@ -174,12 +173,7 @@ public class ExtremeCraftRecipe implements IRecipe<IInventory> {
 
     @Override
     public IRecipeSerializer<?> getSerializer() {
-        return RecipeSerializerRegistry.EXTREME_CRAFT.get();
-    }
-
-    @Override
-    public IRecipeType<?> getType() {
-        return EndlessRecipeType.EXTREME_CRAFT;
+        return RecipeTypeRegistry.EXTREME_CRAFT_SERIALIZER.get();
     }
 
     //合成方块图标

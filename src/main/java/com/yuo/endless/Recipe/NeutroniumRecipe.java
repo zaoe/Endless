@@ -6,7 +6,6 @@ import com.google.gson.JsonSyntaxException;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.Ingredient;
@@ -20,7 +19,7 @@ import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nullable;
 
-public class NeutroniumRecipe implements IRecipe<IInventory> {
+public class NeutroniumRecipe implements INeutroniumRecipe {
 
     private final ItemStack input;
     private final int count; //数量 可能大于64
@@ -33,7 +32,12 @@ public class NeutroniumRecipe implements IRecipe<IInventory> {
         this.count = countIn;
         this.output = outputIn;
     }
-
+    public static class RecipeType implements IRecipeType<NeutroniumRecipe> {
+        @Override
+        public String toString() {
+            return NeutroniumRecipe.TYPE_ID.toString();
+        }
+    }
     public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<NeutroniumRecipe>{
 
         @Override
@@ -41,10 +45,6 @@ public class NeutroniumRecipe implements IRecipe<IInventory> {
             ItemStack input = deserializeItem(JSONUtils.getJsonObject(json, "input"));
             int count = JSONUtils.getInt(json, "count");
             ItemStack output = deserializeItem(JSONUtils.getJsonObject(json, "output"));
-            String type = JSONUtils.getString(json, "type");
-            if (!type.equals("endless:neutronium")){
-                throw new IllegalStateException("Type is not found");
-            }
             return new NeutroniumRecipe(recipeId, input, count, output);
         }
 
@@ -54,10 +54,6 @@ public class NeutroniumRecipe implements IRecipe<IInventory> {
             ItemStack input = buffer.readItemStack();
             int count = buffer.readInt();
             ItemStack output = buffer.readItemStack();
-            String type = buffer.readString();
-            if (!type.equals("endless:neutronium")){
-                throw new IllegalStateException("Type is not found");
-            }
             return new NeutroniumRecipe(recipeId, input, count, output);
         }
 
@@ -86,11 +82,6 @@ public class NeutroniumRecipe implements IRecipe<IInventory> {
     }
 
     @Override
-    public boolean canFit(int width, int height) {
-        return true;
-    }
-
-    @Override
     public ItemStack getRecipeOutput() {
         return this.output;
     }
@@ -102,12 +93,7 @@ public class NeutroniumRecipe implements IRecipe<IInventory> {
 
     @Override
     public IRecipeSerializer<?> getSerializer() {
-        return RecipeSerializerRegistry.NEUTRONIUM.get();
-    }
-
-    @Override
-    public IRecipeType<?> getType() {
-        return EndlessRecipeType.NEUTRONIUM;
+        return RecipeTypeRegistry.NEUTRONIUM_SERIALIZER.get();
     }
 
     //获取数量

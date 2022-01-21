@@ -3,15 +3,15 @@ package com.yuo.endless;
 import com.yuo.endless.Blocks.BlockRegistry;
 import com.yuo.endless.Container.ContainerTypeRegistry;
 import com.yuo.endless.Entity.EntityRegistry;
-import com.yuo.endless.Render.GapingVoidRender;
-import com.yuo.endless.Render.InfinityArrowRender;
-import com.yuo.endless.Render.InfinityArrowSubRender;
 import com.yuo.endless.Gui.ExtremeCraftScreen;
 import com.yuo.endless.Gui.NeutronCollectorScreen;
 import com.yuo.endless.Gui.NeutroniumCompressorScreen;
 import com.yuo.endless.Items.ItemRegistry;
 import com.yuo.endless.Items.Singularity;
-import com.yuo.endless.Recipe.RecipeSerializerRegistry;
+import com.yuo.endless.Recipe.RecipeTypeRegistry;
+import com.yuo.endless.Render.GapingVoidRender;
+import com.yuo.endless.Render.InfinityArrowRender;
+import com.yuo.endless.Render.InfinityArrowSubRender;
 import com.yuo.endless.Sound.ModSounds;
 import com.yuo.endless.Tiles.TileTypeRegistry;
 import net.minecraft.client.Minecraft;
@@ -45,14 +45,14 @@ public class Endless {
         EntityRegistry.ENTITY_TYPES.register(modEventBus);
         TileTypeRegistry.TILE_ENTITIES.register(modEventBus);
         ContainerTypeRegistry.CONTAINERS.register(modEventBus);
-        RecipeSerializerRegistry.RECIPE_TYPES.register(modEventBus);
+        RecipeTypeRegistry.register(modEventBus);
         ModSounds.SOUNDS.register(modEventBus);
     }
 
 //    @SubscribeEvent
 //    public static void registerRecipeSerializers(RegistryEvent.Register<IRecipeSerializer<?>> evt) {
 //        IForgeRegistry<IRecipeSerializer<?>> r = evt.getRegistry();
-//        r.registerAll(RecipeSerializerRegistry.EXTREME_CRAFT.get(), RecipeSerializerRegistry.NEUTRONIUM.get());
+//        r.registerAll(RecipeTypeRegistry.EXTREME_CRAFT_SERIALIZER.get(), RecipeTypeRegistry.NEUTRONIUM_SERIALIZER.get());
 //    }
 
     @SubscribeEvent

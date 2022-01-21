@@ -7,10 +7,10 @@
   ],
   "key": {
     "x": {
-      "item": "endless:neutronium_pile"
+      "item": "endless:neutron_pile"
     }
   },
   "result": {
-    "item": "endless:neutronium_nugget"
+    "item": "endless:neutron_nugget"
   }
 }

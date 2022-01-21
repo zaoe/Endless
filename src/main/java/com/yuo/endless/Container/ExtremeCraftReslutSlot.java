@@ -1,6 +1,6 @@
 package com.yuo.endless.Container;
 
-import com.yuo.endless.Recipe.EndlessRecipeType;
+import com.yuo.endless.Recipe.RecipeTypeRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.IInventory;
@@ -22,7 +22,7 @@ public class ExtremeCraftReslutSlot extends CraftingResultSlot {
     public ItemStack onTake(PlayerEntity thePlayer, ItemStack stack) {
         this.onCrafting(stack);
         net.minecraftforge.common.ForgeHooks.setCraftingPlayer(thePlayer);
-        NonNullList<ItemStack> nonnulllist = thePlayer.world.getRecipeManager().getRecipeNonNull(EndlessRecipeType.EXTREME_CRAFT, this.craftMatrix, thePlayer.world);
+        NonNullList<ItemStack> nonnulllist = thePlayer.world.getRecipeManager().getRecipeNonNull(RecipeTypeRegistry.EXTREME_CRAFT_RECIPE, this.craftMatrix, thePlayer.world);
         net.minecraftforge.common.ForgeHooks.setCraftingPlayer(null);
         for(int i = 0; i < nonnulllist.size(); ++i) {
             ItemStack itemstack = this.craftMatrix.getStackInSlot(i);

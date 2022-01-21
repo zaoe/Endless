@@ -1,7 +1,6 @@
 package com.yuo.endless.Container;
 
-import com.yuo.endless.Recipe.EndlessRecipeType;
-import com.yuo.endless.Tiles.TileUtils;
+import com.yuo.endless.Recipe.RecipeTypeRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
@@ -57,7 +56,7 @@ public class NeutroniumCompressorContainer extends Container {
             ItemStack itemStack1 = slot.getStack();
             itemstack = itemStack1.copy();
             if (index >= 2){
-                if (!TileUtils.getRecipeOut(itemStack1, world, EndlessRecipeType.NEUTRONIUM).isEmpty()){
+                if (hasRecipe(itemStack1)){
                     if (!this.mergeItemStack(itemStack1, 0, 1, false)) return ItemStack.EMPTY;
                 }
                 if (index >= 2 && index < 29) { //从物品栏到快捷栏
@@ -73,8 +72,11 @@ public class NeutroniumCompressorContainer extends Container {
             if (itemStack1.getCount() == itemstack.getCount()) return ItemStack.EMPTY;
             slot.onTake(playerIn, itemStack1);
         }
-
         return itemstack;
+    }
+
+    protected boolean hasRecipe(ItemStack stack) {
+        return this.world.getRecipeManager().getRecipe(RecipeTypeRegistry.NEUTRONIUM_RECIPE, new Inventory(stack), this.world).isPresent();
     }
 
     //获取物品数量
