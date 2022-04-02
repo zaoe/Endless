@@ -83,7 +83,7 @@ public class NeutroniumRecipe implements INeutroniumRecipe {
 
     @Override
     public ItemStack getRecipeOutput() {
-        return this.output;
+        return this.output.copy();
     }
 
     @Override

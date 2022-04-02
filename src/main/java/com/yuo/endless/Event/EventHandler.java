@@ -238,7 +238,7 @@ public class EventHandler {
             if (held.getItem() == ItemRegistry.infinityPickaxe.get() || held.getItem() == ItemRegistry.infinityShovel.get() ||
             held.getItem() == ItemRegistry.infinityAxe.get()) {
                 if (!event.getEntityLiving().isOnGround() || event.getEntityLiving().isInWater()) { //未站立状态,在水中 破坏速度加倍
-                    event.setNewSpeed(event.getNewSpeed() * 2);
+                    event.setNewSpeed(event.getOriginalSpeed() * 2);
                 }
             }
         }

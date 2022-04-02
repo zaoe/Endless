@@ -29,9 +29,6 @@ import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import javax.annotation.Nullable;
 
 public class NeutroniumCompressorTile extends LockableTileEntity implements ITickableTileEntity, ISidedInventory {
-    private int number; //放入物品数量
-    private int numberTotal; //放入物品数量
-
     //用于自动输入输出
     IItemHandler handlerTop = new SidedInvWrapper(this, Direction.UP);
     IItemHandler handlerDown = new SidedInvWrapper(this, Direction.DOWN);
@@ -50,29 +47,27 @@ public class NeutroniumCompressorTile extends LockableTileEntity implements ITic
 
     @Override
     public void tick() {
-        if (world.isRemote || world == null) return;
+        if (world == null || world.isRemote) return;
         if (this.items.get(0).isEmpty()) return; //没有输入时 停止
         ItemStack stack = TileUtils.getRecipeOut(this.items.get(0), this.world, recipeType); //获取此输入的输出
         //当前输出与已有输出不一致时 停止
         if (!this.items.get(1).isEmpty() && !(this.items.get(1).getItem() == stack.getItem()) || stack.isEmpty()) return;
         //机器内有残留时，输入方块与残留的参与合成方块不同时  停止
-        if (this.items.get(1).isEmpty() && number > 0 && !(this.items.get(2).getItem() == this.items.get(0).getItem())) return;
+        if (this.items.get(1).isEmpty() && this.data.get(0) > 0 && !(this.items.get(2).getItem() == this.items.get(0).getItem())) return;
         int count = TileUtils.getRecipeCount(this.world, recipeType, this);
-        numberTotal = count;
-        this.data.set(1, numberTotal);
-        if (count > 0 && number < numberTotal){
+        this.data.set(1,count );
+        if (count > 0 && this.data.get(0) < count){
             this.items.set(2, this.items.get(0).copy());  //缓存参与合成物品
             this.items.get(0).shrink(1);
-            number++;
-            this.data.set(0, number);
+            this.data.set(0, this.data.get(0) + 1);
             markDirty();
         }
-        if (number == numberTotal && numberTotal > 0){ //物品已满，设置输出
+        if (this.data.get(0) == this.data.get(1) && count > 0){ //物品已满，设置输出
             if (this.items.get(1).isEmpty()){
                 this.items.set(1, TileUtils.getRecipeOut(this.items.get(2), world, recipeType));
             }else this.items.get(1).grow(1);
-            number = 0;
-            this.data.set(0, number);
+            this.data.set(0, 0);
+            this.data.set(1, 0);
             markDirty();
         }
     }
@@ -80,18 +75,26 @@ public class NeutroniumCompressorTile extends LockableTileEntity implements ITic
     @Override
     public void read(BlockState state, CompoundNBT nbt) {
         super.read(state, nbt);
+        NbtRead(nbt);
+    }
+
+    private void NbtRead(CompoundNBT nbt){
         this.items = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
         ItemStackHelper.loadAllItems(nbt, this.items);
-        this.number = nbt.getInt("Number");
-        this.numberTotal = nbt.getInt("NumberTotal");
+        this.data.set(0, nbt.getInt("Number"));
+        this.data.set(1,nbt.getInt("NumberTotal"));
     }
 
     @Override
     public CompoundNBT write(CompoundNBT compound) {
-        compound.putInt("Number", this.number);
-        compound.putInt("NumberTotal", this.numberTotal);
-        ItemStackHelper.saveAllItems(compound, this.items);
+        NbtWrite(compound);
         return super.write(compound);
+    }
+
+    private void NbtWrite(CompoundNBT compound){
+        compound.putInt("Number", this.data.get(0));
+        compound.putInt("NumberTotal", this.data.get(1));
+        ItemStackHelper.saveAllItems(compound, this.items);
     }
 
     @Nullable
@@ -108,18 +111,13 @@ public class NeutroniumCompressorTile extends LockableTileEntity implements ITic
     @Override
     public CompoundNBT getUpdateTag() {
         CompoundNBT compound = super.getUpdateTag();
-        compound.putInt("Number", this.number);
-        compound.putInt("NumberTotal", this.numberTotal);
-        ItemStackHelper.saveAllItems(compound, this.items);
+        NbtWrite(compound);
         return compound;
     }
 
     @Override
     public void handleUpdateTag(BlockState state, CompoundNBT tag) {
-        this.items = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
-        ItemStackHelper.loadAllItems(tag, this.items);
-        this.number = tag.getInt("Number");
-        this.numberTotal = tag.getInt("NumberTotal");
+       NbtRead(tag);
     }
 
     @Override

@@ -79,11 +79,7 @@ public class InfinitySword extends SwordItem{
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack heldItem = playerIn.getHeldItem(handIn);
         if (!worldIn.isRemote) {
-            if (playerIn.isSneaking()) {
-                attackAOE(playerIn, 32, 10000, true);
-            }else {
-                attackAOE(playerIn, 32, 10000, false);
-            }
+            attackAOE(playerIn, 32, 10000, playerIn.isSneaking());
             playerIn.getCooldownTracker().setCooldown(heldItem.getItem(), 20);
         }
         worldIn.playSound(playerIn, playerIn.getPosition(), SoundEvents.ITEM_TOTEM_USE, SoundCategory.PLAYERS, 1.0f, 1.0f);

@@ -97,6 +97,10 @@ public class ExtremeCraftTile extends TileEntity implements IInventory, INameabl
     @Override
     public void read(BlockState state, CompoundNBT nbt) {
         super.read(state, nbt);
+        NbtRead(nbt);
+    }
+
+    private void NbtRead(CompoundNBT nbt){
         this.items = NonNullList.withSize(this.getSizeInventory() - 1, ItemStack.EMPTY);
         ItemStackHelper.loadAllItems(nbt, this.items);
         CompoundNBT resultNbt = (CompoundNBT) nbt.get("Result");
@@ -105,11 +109,15 @@ public class ExtremeCraftTile extends TileEntity implements IInventory, INameabl
 
     @Override
     public CompoundNBT write(CompoundNBT compound) {
+        NbtWrite(compound);
+        return super.write(compound);
+    }
+
+    private void NbtWrite(CompoundNBT compound){
         ItemStackHelper.saveAllItems(compound, this.items);
         CompoundNBT nbt = new CompoundNBT();
         this.reslut.get(0).write(nbt);
         compound.put("Result", nbt);
-        return super.write(compound);
     }
 
     @Nullable
@@ -126,19 +134,13 @@ public class ExtremeCraftTile extends TileEntity implements IInventory, INameabl
     @Override
     public CompoundNBT getUpdateTag() {
         CompoundNBT compound = super.getUpdateTag();
-        ItemStackHelper.saveAllItems(compound, this.items);
-        CompoundNBT nbt = new CompoundNBT();
-        this.reslut.get(0).write(nbt);
-        compound.put("Result", nbt);
+        NbtWrite(compound);
         return compound;
     }
 
     @Override
     public void handleUpdateTag(BlockState state, CompoundNBT tag) {
-        this.items = NonNullList.withSize(this.getSizeInventory() - 1, ItemStack.EMPTY);
-        ItemStackHelper.loadAllItems(tag, this.items);
-        CompoundNBT resultNbt = (CompoundNBT) tag.get("Result");
-        this.reslut.set(0, ItemStack.read(resultNbt));
+        NbtRead(tag);
     }
 
     @Override

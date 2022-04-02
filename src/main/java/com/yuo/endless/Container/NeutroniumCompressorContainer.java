@@ -59,9 +59,9 @@ public class NeutroniumCompressorContainer extends Container {
                 if (hasRecipe(itemStack1)){
                     if (!this.mergeItemStack(itemStack1, 0, 1, false)) return ItemStack.EMPTY;
                 }
-                if (index >= 2 && index < 29) { //从物品栏到快捷栏
+                if (index < 29) { //从物品栏到快捷栏
                     if (!this.mergeItemStack(itemStack1, 30, 38, false)) return ItemStack.EMPTY;
-                } else if (index >= 29 && index < 38 ) {
+                } else if (index < 38) {
                     if (!this.mergeItemStack(itemStack1, 2, 29, false)) return ItemStack.EMPTY;
                 }
             }else if (!this.mergeItemStack(itemStack1, 2, 38, false)) return ItemStack.EMPTY; //取出来

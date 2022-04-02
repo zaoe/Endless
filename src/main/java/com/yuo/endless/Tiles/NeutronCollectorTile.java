@@ -37,7 +37,7 @@ public class NeutronCollectorTile extends LockableTileEntity implements ITickabl
         if (!this.output.get(0).isEmpty() && this.output.get(0).getCount() == 64) return; //产物已满，停止计时
         this.timer++;
         this.data.set(0, this.timer);
-        if (world.isRemote || world == null) return;
+        if (world == null || world.isRemote) return;
         if (this.timer >= TIME){
             this.timer = 0;
             this.data.set(0, this.timer);
@@ -52,6 +52,10 @@ public class NeutronCollectorTile extends LockableTileEntity implements ITickabl
     @Override
     public void read(BlockState state, CompoundNBT nbt) {
         super.read(state, nbt);
+       NbtRead(nbt);
+    }
+
+    private void NbtRead(CompoundNBT nbt){
         this.output = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
         ItemStackHelper.loadAllItems(nbt, this.output);
         this.timer = nbt.getInt("Timer");
@@ -59,9 +63,13 @@ public class NeutronCollectorTile extends LockableTileEntity implements ITickabl
 
     @Override
     public CompoundNBT write(CompoundNBT compound) {
+        NbtWrite(compound);
+        return super.write(compound);
+    }
+
+    private void NbtWrite(CompoundNBT compound){
         compound.putInt("Timer", this.timer);
         ItemStackHelper.saveAllItems(compound, this.output);
-        return super.write(compound);
     }
 
     @Nullable
@@ -78,16 +86,13 @@ public class NeutronCollectorTile extends LockableTileEntity implements ITickabl
     @Override
     public CompoundNBT getUpdateTag() {
         CompoundNBT compound = super.getUpdateTag();
-        compound.putInt("Timer", this.timer);
-        ItemStackHelper.saveAllItems(compound, this.output);
+        NbtWrite(compound);
         return compound;
     }
 
     @Override
     public void handleUpdateTag(BlockState state, CompoundNBT tag) {
-        this.output = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
-        ItemStackHelper.loadAllItems(tag, this.output);
-        this.timer = tag.getInt("Timer");
+        NbtRead(tag);
     }
 
     @Override
@@ -164,6 +169,6 @@ public class NeutronCollectorTile extends LockableTileEntity implements ITickabl
     //自动输出
     @Override
     public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
-        return direction == Direction.DOWN ? true : false;
+        return direction == Direction.DOWN;
     }
 }

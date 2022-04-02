@@ -103,9 +103,9 @@ public class ExtremeCraftContainer extends RecipeBookContainer<CraftingInventory
                 if (hasRecipe(itemStack1)){
                     if (!this.mergeItemStack(itemStack1, 0, 81, false)) return ItemStack.EMPTY;
                 }
-                if (index >= 82 && index < 109) { //从物品栏到快捷栏
+                if (index < 109) { //从物品栏到快捷栏
                     if (!this.mergeItemStack(itemStack1, 109, 118, false)) return ItemStack.EMPTY;
-                } else if (index >= 109 && index < 118 ) {
+                } else if (index < 118) {
                     if (!this.mergeItemStack(itemStack1, 82, 109, false)) return ItemStack.EMPTY;
                 }
             } else if (!this.mergeItemStack(itemStack1, 82, 118, false)) return ItemStack.EMPTY; //从合成台取出来

@@ -50,9 +50,9 @@ public class NeutronCollectorContainer extends Container {
             ItemStack itemStack1 = slot.getStack();
             itemstack = itemStack1.copy();
             if (index != 0){
-               if (index >= 1 && index < 28) { //从物品栏到快捷栏
+               if (index < 28) { //从物品栏到快捷栏
                     if (!this.mergeItemStack(itemStack1, 28, 37, false)) return ItemStack.EMPTY;
-                } else if (index >= 28 && index < 37 ) {
+                } else if (index < 37) {
                     if (!this.mergeItemStack(itemStack1, 1, 28, false)) return ItemStack.EMPTY;
                 }
             } else if (!this.mergeItemStack(itemStack1, 1, 37, false)) return ItemStack.EMPTY; //取出来

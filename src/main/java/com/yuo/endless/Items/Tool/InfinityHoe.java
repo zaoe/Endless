@@ -91,52 +91,50 @@ public class InfinityHoe extends HoeItem {
         if (context.getFace() != Direction.DOWN && world.isAirBlock(blockpos.up()) &&(block1 instanceof GrassBlock
                 || block1.equals(Blocks.DIRT) || block1.equals(Blocks.COARSE_DIRT))) { //对着草方块或泥土使用锄头功能
             BlockState blockstate = Blocks.FARMLAND.getDefaultState().with(FarmlandBlock.MOISTURE, 7); //湿润状态的耕地
-            if (blockstate != null) {
-                PlayerEntity playerentity = context.getPlayer();
-                world.playSound(playerentity, blockpos, SoundEvents.ITEM_HOE_TILL, SoundCategory.BLOCKS, 1.0F, 1.0F);
-                if (!world.isRemote && playerentity != null) {
-                    int rang = 5;
-                    BlockPos minPos = blockpos.add(-rang, 0, -rang);
-                    BlockPos maxPos = blockpos.add(rang, 0, rang);
-                    if (playerentity.isSneaking()){
-                        Map<ItemStack, Integer> map = new HashMap<>();
-                        Iterable<BlockPos> boxMutable = BlockPos.getAllInBoxMutable(minPos, maxPos);
-                        for (BlockPos pos : boxMutable) {
+            PlayerEntity playerentity = context.getPlayer();
+            world.playSound(playerentity, blockpos, SoundEvents.ITEM_HOE_TILL, SoundCategory.BLOCKS, 1.0F, 1.0F);
+            if (!world.isRemote && playerentity != null) {
+                int rang = 5;
+                BlockPos minPos = blockpos.add(-rang, 0, -rang);
+                BlockPos maxPos = blockpos.add(rang, 0, rang);
+                if (playerentity.isSneaking()){
+                    Map<ItemStack, Integer> map = new HashMap<>();
+                    Iterable<BlockPos> boxMutable = BlockPos.getAllInBoxMutable(minPos, maxPos);
+                    for (BlockPos pos : boxMutable) {
+                        BlockState state = world.getBlockState(pos);
+                        Block block = state.getBlock();
+                        if (!world.isAirBlock(pos.up())){
+                            for (int i = 1; i <= 3; i++){
+                                harvest(world, pos.up(i), playerentity, map);
+                            }
+                        }
+
+                        if (world.isAirBlock(pos.up()) && (block instanceof GrassBlock || block.equals(Blocks.DIRT) || block.equals(
+                                Blocks.COARSE_DIRT) || block instanceof FarmlandBlock)){ // 当前为草方块或泥土或耕地， 上方为空气
+                            world.setBlockState(pos, blockstate, 11);
+                        }
+                        if (world.isAirBlock(pos) && !world.isAirBlock(pos.down())){ //当期为空气，下方有方块
+                            world.setBlockState(pos, blockstate, 11);
+                        }
+                        if (state.getMaterial().isLiquid() || state.getBlock() instanceof ILiquidContainer){ //液体或可替换变为耕地
+                            world.setBlockState(pos, blockstate, 11);
+                        }
+                    }
+                    ItemHander.spawnMatterCluster(playerentity, world, map);
+
+                    //填充外边液体
+                    Iterable<BlockPos> inBoxMutable = BlockPos.getAllInBoxMutable(minPos, maxPos.add(0, 3, 0));
+                    Iterable<BlockPos> allInBoxMutable = BlockPos.getAllInBoxMutable(minPos.add(-1, 0, -1), maxPos.add(1, 4, 1));
+                    for (BlockPos pos: allInBoxMutable){
+                        if (!hasBox(pos, inBoxMutable)){ //外壳坐标
                             BlockState state = world.getBlockState(pos);
-                            Block block = state.getBlock();
-                            if (!world.isAirBlock(pos.up())){
-                                for (int i = 1; i <= 3; i++){
-                                    harvest(world, pos.up(i), playerentity, map);
-                                }
-                            }
-
-                            if (world.isAirBlock(pos.up()) && (block instanceof GrassBlock || block.equals(Blocks.DIRT) || block.equals(
-                                    Blocks.COARSE_DIRT) || block instanceof FarmlandBlock)){ // 当前为草方块或泥土或耕地， 上方为空气
-                                world.setBlockState(pos, blockstate, 11);
-                            }
-                            if (world.isAirBlock(pos) && !world.isAirBlock(pos.down())){ //当期为空气，下方有方块
-                                world.setBlockState(pos, blockstate, 11);
-                            }
-                            if (state.getMaterial().isLiquid() || state.getBlock() instanceof ILiquidContainer){ //液体或可替换变为耕地
-                                world.setBlockState(pos, blockstate, 11);
-                            }
+                            if (state.getMaterial().isLiquid() || state.getBlock() instanceof ILiquidContainer)//如果是液体，则将其填埋
+                            world.setBlockState(pos, Blocks.STONE.getDefaultState());
                         }
-                        ItemHander.spawnMatterCluster(playerentity, world, map);
-
-                        //填充外边液体
-                        Iterable<BlockPos> inBoxMutable = BlockPos.getAllInBoxMutable(minPos, maxPos.add(0, 3, 0));
-                        Iterable<BlockPos> allInBoxMutable = BlockPos.getAllInBoxMutable(minPos.add(-1, 0, -1), maxPos.add(1, 4, 1));
-                        for (BlockPos pos: allInBoxMutable){
-                            if (!hasBox(pos, inBoxMutable)){ //外壳坐标
-                                BlockState state = world.getBlockState(pos);
-                                if (state.getMaterial().isLiquid() || state.getBlock() instanceof ILiquidContainer)//如果是液体，则将其填埋
-                                world.setBlockState(pos, Blocks.STONE.getDefaultState());
-                            }
-                        }
-                    }else world.setBlockState(blockpos, blockstate, 11); //未潜行耕种一个方块
-                }
-                return ActionResultType.func_233537_a_(world.isRemote);
+                    }
+                }else world.setBlockState(blockpos, blockstate, 11); //未潜行耕种一个方块
             }
+            return ActionResultType.func_233537_a_(world.isRemote);
         }
         return ActionResultType.PASS;
     }

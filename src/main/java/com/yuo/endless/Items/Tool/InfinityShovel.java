@@ -40,11 +40,7 @@ public class InfinityShovel extends ShovelItem {
     public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
         ItemStack stack = player.getHeldItem(hand);
         if (player.isSneaking()) { //潜行右键切换形态
-            CompoundNBT tags = stack.getTag();
-            if (tags == null) {
-                tags = new CompoundNBT();
-                stack.setTag(tags);
-            }
+            CompoundNBT tags = stack.getOrCreateTag();
             tags.putBoolean("destroyer", !tags.getBoolean("destroyer"));
             player.swingArm(hand); //摆臂
             return ActionResult.resultSuccess(stack);
@@ -54,7 +50,7 @@ public class InfinityShovel extends ShovelItem {
 
     @Override
     public boolean onBlockStartBreak(ItemStack itemstack, BlockPos pos, PlayerEntity player) {
-        if (itemstack.hasTag() && itemstack.getTag().getBoolean("destroyer")){
+        if (itemstack.getOrCreateTag().getBoolean("destroyer")){
             World world = player.world;
             if (!world.isRemote){
                 BlockState state = world.getBlockState(pos);
@@ -69,7 +65,7 @@ public class InfinityShovel extends ShovelItem {
 
     @Override
     public ActionResultType onItemUse(ItemUseContext context) {
-        if (context.getItem().hasTag() && context.getItem().getTag().getBoolean("destroyer"))
+        if (context.getItem().hasTag() && context.getItem().getOrCreateTag().getBoolean("destroyer"))
             return ActionResultType.PASS; //正常形态才可以使用
         World world = context.getWorld();
         BlockPos blockpos = context.getPos();
@@ -89,7 +85,7 @@ public class InfinityShovel extends ShovelItem {
                 }
 
                 CampfireBlock.extinguish(world, blockpos, blockstate);
-                blockstate2 = blockstate.with(CampfireBlock.LIT, Boolean.valueOf(false));
+                blockstate2 = blockstate.with(CampfireBlock.LIT, Boolean.FALSE);
             }
 
             if (blockstate2 != null) {

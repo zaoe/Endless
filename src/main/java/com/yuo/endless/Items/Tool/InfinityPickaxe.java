@@ -60,11 +60,7 @@ public class InfinityPickaxe extends PickaxeItem {
     public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
         ItemStack stack = player.getHeldItem(hand);
         if (player.isSneaking()) { //潜行右键切换形态
-            CompoundNBT tags = stack.getTag();
-            if (tags == null) {
-                tags = new CompoundNBT();
-                stack.setTag(tags);
-            }
+            CompoundNBT tags = stack.getOrCreateTag();
             if (EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, stack) < 10) { //添加附魔
                 stack.addEnchantment(Enchantments.FORTUNE, 10);
             }
@@ -87,7 +83,7 @@ public class InfinityPickaxe extends PickaxeItem {
 
     @Override
     public boolean onBlockStartBreak(ItemStack itemstack, BlockPos pos, PlayerEntity player) {
-        if (itemstack.hasTag() && itemstack.getTag().getBoolean("hammer")){
+        if (itemstack.getOrCreateTag().getBoolean("hammer")){
             World world = player.world;
             if (!world.isRemote){
                 BlockState state = world.getBlockState(pos);
