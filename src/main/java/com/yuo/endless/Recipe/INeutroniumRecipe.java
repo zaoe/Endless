@@ -8,7 +8,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 
 public interface INeutroniumRecipe extends IRecipe<IInventory> {
-    ResourceLocation TYPE_ID = new ResourceLocation(Endless.MODID, "neutronium");
+    ResourceLocation TYPE_ID = new ResourceLocation(Endless.MOD_ID, "neutronium");
 
     @Override
     default IRecipeType<?> getType(){

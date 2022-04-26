@@ -15,9 +15,9 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 
 public class ExtremeCraftRecipeCategory implements IRecipeCategory<ExtremeCraftRecipe> {
-    public static final ResourceLocation UID = new ResourceLocation(Endless.MODID, "extreme_craft");
+    public static final ResourceLocation UID = new ResourceLocation(Endless.MOD_ID, "extreme_craft");
     //合成配方背景
-    public static final ResourceLocation TEXTURE = new ResourceLocation(Endless.MODID, "textures/gui/extreme_jei.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation(Endless.MOD_ID, "textures/gui/extreme_jei.png");
 
     private final IDrawable background;
     private final IDrawable icon;

@@ -7,9 +7,7 @@ import com.yuo.endless.Blocks.BlockRegistry;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.item.crafting.*;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.NonNullList;
@@ -40,6 +38,11 @@ public class ExtremeCraftRecipe implements IExtremeCraftRecipe {
         this.Height = HeightIn;
         this.items = itemsIn;
         this.result = result;
+    }
+
+    //追加输入
+    public void addInputs(NonNullList<Ingredient> ingredients){
+        this.items.addAll(ingredients);
     }
 
     public static class RecipeType implements IRecipeType<ExtremeCraftRecipe> {
@@ -149,6 +152,13 @@ public class ExtremeCraftRecipe implements IExtremeCraftRecipe {
         return true;
     }
 
+    public boolean isInput(ItemStack stack){
+        for (Ingredient item : this.items) {
+            if (item.test(stack)) return true;
+        }
+        return false;
+    }
+
     //获取合成结果
     @Override
     public ItemStack getCraftingResult(IInventory inv) {
@@ -163,7 +173,7 @@ public class ExtremeCraftRecipe implements IExtremeCraftRecipe {
 
     @Override
     public ItemStack getRecipeOutput() {
-        return this.result;
+        return this.result.copy();
     }
 
     @Override

@@ -3,28 +3,22 @@ package com.yuo.endless.Jei;
 import com.yuo.endless.Container.ExtremeCraftContainer;
 import com.yuo.endless.Endless;
 import com.yuo.endless.Items.ItemRegistry;
-import com.yuo.endless.Recipe.ExtremeCraftRecipe;
-import com.yuo.endless.Recipe.NeutroniumRecipe;
-import com.yuo.endless.Recipe.RecipeTypeRegistry;
+import com.yuo.endless.Recipe.CompressorManager;
+import com.yuo.endless.Recipe.ExtremeCraftingManager;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.IRecipeTransferRegistration;
-import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.util.ResourceLocation;
-
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 @JeiPlugin
 public class EndlessJei implements IModPlugin {
     @Override
     public ResourceLocation getPluginUid() {
-        return new ResourceLocation(Endless.MODID, "jei_plugin");
+        return new ResourceLocation(Endless.MOD_ID, "jei_plugin");
     }
 
     //插件告诉JEI定制菜谱类别
@@ -38,11 +32,8 @@ public class EndlessJei implements IModPlugin {
     //注册配方类别
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
-        RecipeManager recipeManager = Objects.requireNonNull(Minecraft.getInstance().world).getRecipeManager();
-        registration.addRecipes(recipeManager.getRecipesForType(RecipeTypeRegistry.EXTREME_CRAFT_RECIPE).stream()
-                .filter(r -> r instanceof ExtremeCraftRecipe).collect(Collectors.toList()), ExtremeCraftRecipeCategory.UID);
-        registration.addRecipes(recipeManager.getRecipesForType(RecipeTypeRegistry.NEUTRONIUM_RECIPE).stream()
-                .filter(r -> r instanceof NeutroniumRecipe).collect(Collectors.toList()), NeutroniumCRecipeCategory.UID);
+        registration.addRecipes(ExtremeCraftingManager.getInstance().getRecipeList(), ExtremeCraftRecipeCategory.UID);
+        registration.addRecipes(CompressorManager.getRecipes(), NeutroniumCRecipeCategory.UID);
     }
 
     //注册+号添加
@@ -55,5 +46,6 @@ public class EndlessJei implements IModPlugin {
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
         registration.addRecipeCatalyst(new ItemStack(ItemRegistry.extremeCraftingTable.get()), ExtremeCraftRecipeCategory.UID);
+        registration.addRecipeCatalyst(new ItemStack(ItemRegistry.neutroniumCompressor.get()), NeutroniumCRecipeCategory.UID);
     }
 }

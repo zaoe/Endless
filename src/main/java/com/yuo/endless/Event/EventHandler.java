@@ -30,6 +30,7 @@ import net.minecraftforge.event.entity.item.ItemEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -38,7 +39,7 @@ import java.util.*;
 /**
  * 事件处理类
  */
-@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = Endless.MODID)
+@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = Endless.MOD_ID)
 public class EventHandler {
     public static List<String> playersWithHead = new ArrayList<String>();
     public static List<String> playersWithChest = new ArrayList<String>();
@@ -306,6 +307,21 @@ public class EventHandler {
                 .setStyle(Style.EMPTY.setHoverEvent(HoverEvent.Action.SHOW_TEXT.deserialize(new TranslationTextComponent("endless.message.login0")))
                         .setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://space.bilibili.com/21854371"))), UUID.randomUUID());
     }
+
+    //恒星燃料
+    @SubscribeEvent
+    public static void starFuel(FurnaceFuelBurnTimeEvent event){
+        Item item = event.getItemStack().getItem();
+        if (item == ItemRegistry.starFuel.get()){
+            event.setBurnTime(Integer.MAX_VALUE);
+        }
+    }
+
+//    @SubscribeEvent
+//    public static void recipeChange(DifficultyChangeEvent event){
+//        Difficulty difficulty = event.getDifficulty();
+//        CompressorManager.changeAllCount(difficulty);
+//    }
     /**
      * 添加额外掉落
      * @param item 需要掉落的物品

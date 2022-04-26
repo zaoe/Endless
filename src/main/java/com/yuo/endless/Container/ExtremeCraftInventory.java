@@ -34,7 +34,7 @@ public class ExtremeCraftInventory extends CraftingInventory {
                 container.onCraftMatrixChanged(this);
                 return itemstack;
             } else {
-                itemstack = stack.split(count);
+                itemstack = stack.split(count); //消耗
                 if (stack.getCount() == 0) {
                     craftTile.setInventorySlotContents(index, ItemStack.EMPTY);
                 }

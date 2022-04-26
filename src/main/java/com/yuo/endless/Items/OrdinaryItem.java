@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * 通用普通物品
  */
-public class OrdinaryItem extends Item{
+public class OrdinaryItem extends Item {
 
 	public OrdinaryItem() {
 		super(new Properties().group(ModGroup.myGroup)); //设置物品所在 创造模式物品栏
@@ -52,5 +52,24 @@ public class OrdinaryItem extends Item{
 		if (item == ItemRegistry.recordFragment.get()){
 			tooltip.add(new TranslationTextComponent("endless.text.itemInfo.record_fragment"));
 		}
+		if (item == ItemRegistry.starFuel.get()){
+			tooltip.add(new TranslationTextComponent("endless.text.itemInfo.star_fuel"));
+		}
+	}
+
+	@Override
+	public ItemStack getDefaultInstance() {
+		if (this == ItemRegistry.neutronPile.get()){
+			return setEmc(this, 100L);
+		}else if (this == ItemRegistry.infinityCatalyst.get()){
+			return setEmc(this, 214905788L);
+		}
+		return super.getDefaultInstance();
+	}
+
+	private static ItemStack setEmc(Item item, Long value){
+		ItemStack stack = new ItemStack(item);
+		stack.getOrCreateTag().putLong("StoredEMC", value);
+		return stack;
 	}
 }

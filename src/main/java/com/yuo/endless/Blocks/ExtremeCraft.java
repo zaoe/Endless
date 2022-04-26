@@ -2,10 +2,7 @@ package com.yuo.endless.Blocks;
 
 import com.yuo.endless.Container.ExtremeCraftContainer;
 import com.yuo.endless.Tiles.ExtremeCraftTile;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ContainerBlock;
-import net.minecraft.block.SoundType;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
@@ -26,7 +23,7 @@ import net.minecraftforge.common.ToolType;
 
 import javax.annotation.Nullable;
 
-public class ExtremeCraft extends ContainerBlock {
+public class ExtremeCraft extends Block {
     private static final ITextComponent CONTAINER_NAME = new TranslationTextComponent("gui.endless.extreme_craft");
 
     public ExtremeCraft() {
@@ -64,9 +61,8 @@ public class ExtremeCraft extends ContainerBlock {
 
     @Override
     public INamedContainerProvider getContainer(BlockState state, World worldIn, BlockPos pos) {
-        return new SimpleNamedContainerProvider((id, inventory, player) -> {
-            return new ExtremeCraftContainer(id, inventory, (ExtremeCraftTile) worldIn.getTileEntity(pos));
-        }, CONTAINER_NAME);
+        return new SimpleNamedContainerProvider((id, inventory, player) ->
+                new ExtremeCraftContainer(id, inventory, (ExtremeCraftTile) worldIn.getTileEntity(pos)), CONTAINER_NAME);
     }
 
     //被破坏时 里面所有物品掉落
@@ -88,9 +84,4 @@ public class ExtremeCraft extends ContainerBlock {
         }
     }
 
-    @Nullable
-    @Override
-    public TileEntity createNewTileEntity(IBlockReader worldIn) {
-        return new ExtremeCraftTile();
-    }
 }

@@ -1,7 +1,7 @@
 {
   "parent": "item/handheld",
   "textures": {
-    "layer0": "endless:item/infinity_shovel"
+    "layer0": "endless:item/tool/infinity_shovel"
   },
   "overrides": [
     {

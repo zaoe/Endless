@@ -82,7 +82,7 @@ public class InfinitySword extends SwordItem{
             attackAOE(playerIn, 32, 10000, playerIn.isSneaking());
             playerIn.getCooldownTracker().setCooldown(heldItem.getItem(), 20);
         }
-        worldIn.playSound(playerIn, playerIn.getPosition(), SoundEvents.ITEM_TOTEM_USE, SoundCategory.PLAYERS, 1.0f, 1.0f);
+        worldIn.playSound(playerIn, playerIn.getPosition(), SoundEvents.ENTITY_PLAYER_LEVELUP , SoundCategory.PLAYERS, 1.0f, 5.0f);
         return ActionResult.resultSuccess(heldItem);
     }
     //aoe伤害

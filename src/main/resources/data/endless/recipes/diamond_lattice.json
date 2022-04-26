@@ -2,12 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "x x",
-    " x ",
+    " y ",
     "x x"
   ],
   "key": {
     "x": {
       "item": "minecraft:diamond"
+    },
+    "y": {
+      "item": "minecraft:netherite_scrap"
     }
   },
   "result": {

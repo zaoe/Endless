@@ -1,7 +1,10 @@
 package com.yuo.endless.Blocks;
 
 import com.yuo.endless.Tiles.NeutroniumCompressorTile;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.HorizontalBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
@@ -22,7 +25,7 @@ import net.minecraftforge.common.ToolType;
 
 import javax.annotation.Nullable;
 
-public class NeutroniumCompressor extends ContainerBlock {
+public class NeutroniumCompressor extends Block {
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
 
     public NeutroniumCompressor() {
@@ -87,9 +90,4 @@ public class NeutroniumCompressor extends ContainerBlock {
         builder.add(FACING);
     }
 
-    @Nullable
-    @Override
-    public TileEntity createNewTileEntity(IBlockReader worldIn) {
-        return new NeutroniumCompressorTile();
-    }
 }

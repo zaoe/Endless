@@ -6,11 +6,12 @@ import com.yuo.endless.Container.NeutroniumCompressorContainer;
 import com.yuo.endless.Endless;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
 public class NeutroniumCompressorScreen extends ContainerScreen<NeutroniumCompressorContainer>{
-    private final ResourceLocation RESOURCE = new ResourceLocation(Endless.MODID, "textures/gui/compressor.png");
+    private final ResourceLocation RESOURCE = new ResourceLocation(Endless.MOD_ID, "textures/gui/compressor.png");
     private final int textureWidth = 176;
     private final int textureHeight = 166;
 
@@ -33,6 +34,11 @@ public class NeutroniumCompressorScreen extends ContainerScreen<NeutroniumCompre
         int l = this.container.getProgress1();
         this.blit(matrixStack, i + 62, j + 34, 176, 0, k , 16);
         this.blit(matrixStack, i + 90, j + 35 + 16 - l, 176, 32 - l, 16, l);
+        ItemStack item = this.container.getItem();
+        if (!item.isEmpty()){ //渲染当前参与合成的物品
+            this.minecraft.getItemRenderer().renderItemIntoGUI(item, i + 15, j + 35);
+            this.font.drawString(matrixStack, item.getItem().getName().getString(), i + 15, j + 25, 0x696969);
+        }
     }
 
     @Override

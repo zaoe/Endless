@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "endless:item/resource_neutron_nugget"
+    "layer0": "endless:item/neutron_nugget"
   }
 }

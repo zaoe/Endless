@@ -6,20 +6,16 @@ public class NCIntArray implements IIntArray {
     private int timer; //计时器
     @Override
     public int get(int index) {
-        switch(index) {
-            case 0:
-                return timer;
-            default:
-                return 0;
+        if (index == 0) {
+            return timer;
         }
+        return 0;
     }
 
     @Override
     public void set(int index, int value) {
-        switch(index) {
-            case 0:
-                timer = value;
-                break;
+        if (index == 0) {
+            timer = value;
         }
     }
 

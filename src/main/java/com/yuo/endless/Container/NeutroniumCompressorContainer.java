@@ -1,35 +1,38 @@
 package com.yuo.endless.Container;
 
+import com.yuo.endless.Recipe.CompressorManager;
 import com.yuo.endless.Recipe.RecipeTypeRegistry;
+import com.yuo.endless.Tiles.NeutroniumCompressorTile;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class NeutroniumCompressorContainer extends Container {
 
-    private final IInventory items;
+    private final NeutroniumCompressorTile tile;
     private final NiumCIntArray data;
     private final World world;
 
     public NeutroniumCompressorContainer(int id, PlayerInventory playerInventory){
-        this(id,playerInventory , new Inventory(3) , new NiumCIntArray());
+        this(id,playerInventory , new NeutroniumCompressorTile());
     }
 
-    public NeutroniumCompressorContainer(int id, PlayerInventory playerInventory, IInventory inventory, NiumCIntArray intArray) {
+    public NeutroniumCompressorContainer(int id, PlayerInventory playerInventory, NeutroniumCompressorTile inventory) {
         super(ContainerTypeRegistry.neutroniumCompressorContainer.get(), id);
-        this.items = inventory;
-        this.data = intArray;
+        this.tile = inventory;
+        this.data = inventory.data;
         this.world = playerInventory.player.world;
         trackIntArray(data);
         //矿物输入槽
-        this.addSlot(new NiumCSlot(items, world, 0, 39,35));
+        this.addSlot(new NiumCSlot(tile, world, 0, 39,35));
         //奇点槽
-        this.addSlot(new NCOutputSlot(items, 1, 116,35));
+        this.addSlot(new NCOutputSlot(tile, 1, 116,35));
         //添加玩家物品栏
         for(int i = 0; i < 3; ++i) {
             for(int j = 0; j < 9; ++j) {
@@ -44,7 +47,7 @@ public class NeutroniumCompressorContainer extends Container {
 
     @Override
     public boolean canInteractWith(PlayerEntity playerIn) {
-        return this.items.isUsableByPlayer(playerIn);
+        return this.tile.isUsableByPlayer(playerIn);
     }
 
     //玩家shift行为
@@ -56,7 +59,7 @@ public class NeutroniumCompressorContainer extends Container {
             ItemStack itemStack1 = slot.getStack();
             itemstack = itemStack1.copy();
             if (index >= 2){
-                if (hasRecipe(itemStack1)){
+                if (CompressorManager.getOutput(itemStack1).isEmpty()){
                     if (!this.mergeItemStack(itemStack1, 0, 1, false)) return ItemStack.EMPTY;
                 }
                 if (index < 29) { //从物品栏到快捷栏
@@ -77,6 +80,21 @@ public class NeutroniumCompressorContainer extends Container {
 
     protected boolean hasRecipe(ItemStack stack) {
         return this.world.getRecipeManager().getRecipe(RecipeTypeRegistry.NEUTRONIUM_RECIPE, new Inventory(stack), this.world).isPresent();
+    }
+
+    /**
+     * 获取正参与合成物品
+     * @return 物品
+     */
+    public ItemStack getItem(){
+//        Ingredient recipeInput = TileUtils.getRecipeInput(world, tile);
+//        if (!recipeInput.isSimple()) return recipeInput;
+        BlockPos pos = new BlockPos(data.get(2), data.get(3), data.get(4));
+        TileEntity tileEntity = world.getTileEntity(pos);
+        if (tileEntity instanceof NeutroniumCompressorTile){
+            return ((NeutroniumCompressorTile) tileEntity).getStackInSlot(2);
+        }
+        return this.tile.getStackInSlot(2);
     }
 
     //获取物品数量

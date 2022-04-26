@@ -10,7 +10,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
 public class ExtremeCraftScreen extends ContainerScreen<ExtremeCraftContainer>{
-    private final ResourceLocation RESOURCE = new ResourceLocation(Endless.MODID, "textures/gui/dire_crafting_gui.png");
+    private final ResourceLocation RESOURCE = new ResourceLocation(Endless.MOD_ID, "textures/gui/dire_crafting_gui.png");
     private final int textureWidth = 238;
     private final int textureHeight = 256;
 

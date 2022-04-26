@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "endless:item/resource_diamond_lattice"
+    "layer0": "endless:item/diamond_lattice"
   }
 }

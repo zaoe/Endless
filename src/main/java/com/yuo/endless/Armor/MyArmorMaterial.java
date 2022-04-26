@@ -16,7 +16,7 @@ import java.util.function.Supplier;
 //盔甲材料类
 public enum MyArmorMaterial implements IArmorMaterial {
 	//---------材质---耐久值----------护甲值-------附魔能力--------音效----------------------盔甲韧性- 击退抗性-修复材料
-	INFINITY(Endless.MODID + ":" + "infinity", 999, new int[] { 6, 12, 10, 6 }, 99, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 3, 1,() -> Ingredient.EMPTY);
+	INFINITY(Endless.MOD_ID + ":" + "infinity", 999, new int[] { 6, 12, 10, 6 }, 99, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 3, 1,() -> Ingredient.EMPTY);
 
 	private static final int[] MAX_DAMAGE_ARRAY = new int[] { 13, 15, 16, 11 };
 	private final String name;

@@ -1,7 +1,7 @@
 {
   "parent": "item/bow",
   "textures": {
-    "layer0": "endless:item/infinity_bow_standby"
+    "layer0": "endless:item/tool/infinity_bow_standby"
   },
   "overrides": [
     {

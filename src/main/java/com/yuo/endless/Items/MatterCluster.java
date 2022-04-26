@@ -8,6 +8,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -38,56 +39,55 @@ public class MatterCluster extends Item  {
 
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        if (!stack.hasTag() || !stack.getTag().keySet().contains("matterCluster")){
+        if (!stack.getOrCreateTag().contains("matterCluster")){
             return ;
         }
-        ListNBT matterCluster = (ListNBT) stack.getTag().get("matterCluster");
-        //物品种类数量信息
-        tooltip.add(new StringTextComponent(matterCluster.size() + "/64" + new TranslationTextComponent("endless.text.itemInfo.matter_cluster2").getString()));
-        tooltip.add(new StringTextComponent(""));
+        ListNBT matterCluster = (ListNBT) stack.getOrCreateTag().get("matterCluster");
+        if (matterCluster != null){
+            //物品种类数量信息
+            tooltip.add(new StringTextComponent(matterCluster.size() + "/64" + new TranslationTextComponent("endless.text.itemInfo.matter_cluster2").getString()));
+            tooltip.add(new StringTextComponent(""));
 
-        if (Screen.hasShiftDown()) { //在物品上按下shift键
-            for (int i = 0; i < matterCluster.size(); i++) {
-                CompoundNBT nbt = (CompoundNBT) matterCluster.get(i);
-                ItemStack read = ItemStack.read(nbt);
-                int count = nbt.getInt("count");
+            if (Screen.hasShiftDown()) { //在物品上按下shift键
+                for (INBT inbt : matterCluster) {
+                    CompoundNBT nbt = (CompoundNBT) inbt;
+                    ItemStack read = ItemStack.read(nbt);
+                    int count = nbt.getInt("count");
 
-                tooltip.add(new StringTextComponent(read.getItem().getRarity(read).color + read.getDisplayName().getString() + TextFormatting.GRAY + " x " + count));
+                    tooltip.add(new StringTextComponent(read.getItem().getRarity(read).color + read.getDisplayName().getString() + TextFormatting.GRAY + " x " + count));
+                }
+            } else {
+                tooltip.add(new TranslationTextComponent("endless.text.itemInfo.matter_cluster"));
+                tooltip.add(new TranslationTextComponent("endless.text.itemInfo.matter_cluster1"));
             }
-        } else {
-            tooltip.add(new TranslationTextComponent("endless.text.itemInfo.matter_cluster"));
-            tooltip.add(new TranslationTextComponent("endless.text.itemInfo.matter_cluster1"));
         }
     }
 
     //设置物品tag
     public static void setItemTag(ItemStack stack, Map<ItemStack, Integer> map){
-        if (!stack.hasTag()){
-            stack.setTag(new CompoundNBT());
-        }
-        CompoundNBT nbt = new CompoundNBT();
         ListNBT listNBT = new ListNBT();
 
         for (ItemStack key : map.keySet()) { //遍历所有键
-            CompoundNBT nbt1 = new CompoundNBT();
-            key.write(nbt1);
-            nbt1.putInt("count", map.get(key));
-            listNBT.add(nbt1);
+            CompoundNBT nbt = new CompoundNBT();
+            key.write(nbt);
+            nbt.putInt("count", map.get(key));
+            listNBT.add(nbt);
         }
-        nbt.put("matterCluster", listNBT);
-        stack.setTag(nbt);
+        stack.getOrCreateTag().put("matterCluster", listNBT);
     }
 
     //获取物品tag
     public static Map<ItemStack, Integer> getItemTag(ItemStack stack){
-        if (!stack.hasTag() || !stack.getTag().keySet().contains("matterCluster")){
-            return null;
-        }
-        ListNBT matterCluster = (ListNBT) stack.getTag().get("matterCluster");
+        CompoundNBT orCreateTag = stack.getOrCreateTag();
         Map<ItemStack, Integer> data = new HashMap<>();
-        for (int i = 0; i < matterCluster.size(); i++){
-            CompoundNBT nbt = (CompoundNBT) matterCluster.get(i);
-            data.put(ItemStack.read(nbt), nbt.getInt("count"));
+        if (orCreateTag.contains("matterCluster")){
+            ListNBT matterCluster = (ListNBT) orCreateTag.get("matterCluster");
+            if (matterCluster != null){
+                for (INBT inbt : matterCluster) {
+                    CompoundNBT nbt = (CompoundNBT) inbt;
+                    data.put(ItemStack.read(nbt), nbt.getInt("count"));
+                }
+            }
         }
         return data;
     }
@@ -98,7 +98,7 @@ public class MatterCluster extends Item  {
         if (!worldIn.isRemote){
             //生成物质团类所有物品
             Map<ItemStack, Integer> map = getItemTag(stack);
-            if (map != null){
+            if (map.size() > 0){
                 for (ItemStack key : map.keySet()) {
                     Integer integer = map.get(key);
                     int size = key.getMaxStackSize();

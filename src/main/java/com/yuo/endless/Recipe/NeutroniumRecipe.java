@@ -1,5 +1,6 @@
 package com.yuo.endless.Recipe;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
@@ -21,14 +22,14 @@ import javax.annotation.Nullable;
 
 public class NeutroniumRecipe implements INeutroniumRecipe {
 
-    private final ItemStack input;
-    private final int count; //数量 可能大于64
+    private NonNullList<ItemStack> inputs; //可压缩物品 压缩效率 推荐为5的倍数
+    private int count; //数量 可能大于64
     private final ItemStack output;
     private final ResourceLocation id;
 
-    public NeutroniumRecipe(ResourceLocation idIn, ItemStack inputIn, int countIn, ItemStack outputIn){
+    public NeutroniumRecipe(ResourceLocation idIn, NonNullList<ItemStack> inputIn, int countIn, ItemStack outputIn){
         this.id = idIn;
-        this.input = inputIn;
+        this.inputs = inputIn;
         this.count = countIn;
         this.output = outputIn;
     }
@@ -42,24 +43,35 @@ public class NeutroniumRecipe implements INeutroniumRecipe {
 
         @Override
         public NeutroniumRecipe read(ResourceLocation recipeId, JsonObject json) { //从json中获取信息
-            ItemStack input = deserializeItem(JSONUtils.getJsonObject(json, "input"));
+            NonNullList<ItemStack> list = NonNullList.create();
+            for (JsonElement inputs : JSONUtils.getJsonArray(json, "inputs")) {
+                list.add(new ItemStack(JSONUtils.getItem(inputs, "item")));
+            }
+
             int count = JSONUtils.getInt(json, "count");
             ItemStack output = deserializeItem(JSONUtils.getJsonObject(json, "output"));
-            return new NeutroniumRecipe(recipeId, input, count, output);
+            return new NeutroniumRecipe(recipeId, list, count, output);
         }
 
         @Nullable
         @Override
         public NeutroniumRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-            ItemStack input = buffer.readItemStack();
+            NonNullList<ItemStack> list = NonNullList.create();
+            int i = buffer.readInt();
+            for (int j = 0; j < i;j++)
+                list.add(buffer.readItemStack());
             int count = buffer.readInt();
             ItemStack output = buffer.readItemStack();
-            return new NeutroniumRecipe(recipeId, input, count, output);
+            return new NeutroniumRecipe(recipeId, list, count, output);
         }
 
         @Override
         public void write(PacketBuffer buffer, NeutroniumRecipe recipe) {
-            buffer.writeItemStack(recipe.input);
+            buffer.writeInt(recipe.inputs.size());
+            for (ItemStack stack : recipe.inputs) {
+                buffer.writeItemStack(stack);
+            }
+
             buffer.writeInt(recipe.count);
             buffer.writeItemStack(recipe.output);
         }
@@ -67,13 +79,45 @@ public class NeutroniumRecipe implements INeutroniumRecipe {
 
     @Override
     public boolean matches(IInventory inv, World worldIn) {
-        if (inv.getStackInSlot(0).getItem() == input.getItem()) return true;
-        else return false;
+        ItemStack itemStack = inv.getStackInSlot(0);
+        for (ItemStack stack : inputs) {
+            if (stack.isItemEqual(itemStack)) return true;
+        }
+
+        return false;
+    }
+
+    //输入相同
+    public boolean isInput(ItemStack stack){
+        for (ItemStack itemStack : inputs) {
+            if (itemStack.isItemEqual(stack)) return true;
+        }
+
+        return false;
+    }
+
+    //设置数量
+    public void setCount(int count){
+        this.count = count;
+    }
+
+    //添加输入
+    public void addInput(NonNullList<ItemStack> map){
+        inputs.addAll(map);
     }
 
     @Override
     public NonNullList<Ingredient> getIngredients() {
-        return NonNullList.withSize(1, Ingredient.fromStacks(new ItemStack(input.getItem(), count)));
+        NonNullList<ItemStack> list = NonNullList.create();
+        for (ItemStack input : inputs) {
+            list.add(new ItemStack(input.getItem(), count / input.getCount()));
+        }
+
+        return NonNullList.from(Ingredient.EMPTY, Ingredient.fromStacks(list.stream()));
+    }
+
+    public NonNullList<ItemStack> getRecipeInput() {
+        return inputs;
     }
 
     @Override
@@ -97,7 +141,7 @@ public class NeutroniumRecipe implements INeutroniumRecipe {
     }
 
     //获取数量
-    public int getCount(){
+    public int getRecipeCount(){
         return count;
     }
 
