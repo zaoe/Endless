@@ -11,6 +11,8 @@ import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.NonNullList;
+import vazkii.botania.common.block.ModBlocks;
+import vazkii.botania.common.item.ModItems;
 
 import java.util.Arrays;
 
@@ -597,6 +599,10 @@ public class ModRecipeManager {
             ExtremeCraftingManager.getInstance().addRecipeInput(stew,
                     Ingredient.fromStacks(new ItemStack(IafItemRegistry.FIRE_STEW), new ItemStack(IafItemRegistry.FROST_STEW),
                             new ItemStack(IafItemRegistry.LIGHTNING_STEW)));
+        }
+        if (Endless.IS_BOTANIA){
+            ExtremeCraftingManager.getInstance().addRecipeInput(infinityCatalyst,
+                    new ItemStack(ModBlocks.terrasteelBlock), new ItemStack(ModItems.gaiaIngot));
         }
     }
 

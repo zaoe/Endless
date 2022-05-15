@@ -3,7 +3,9 @@ package com.yuo.endless.Event;
 import com.yuo.endless.Armor.InfinityArmor;
 import com.yuo.endless.Endless;
 import com.yuo.endless.Items.ItemRegistry;
-import com.yuo.endless.Items.Tool.*;
+import com.yuo.endless.Items.Tool.InfinityDamageSource;
+import com.yuo.endless.Items.Tool.InfinityPickaxe;
+import com.yuo.endless.Items.Tool.SkullfireSword;
 import net.minecraft.block.Blocks;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -26,7 +28,6 @@ import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.event.entity.item.ItemEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -179,16 +180,16 @@ public class EventHandler {
         }
     }
     //不会被烧毁的物品
-    @SubscribeEvent
-    public static void entityItemUnDeath(ItemEvent event) { //物品实体事件
-        ItemEntity entityItem = event.getEntityItem();
-        Item item = entityItem.getItem().getItem();
-        if(item instanceof InfinityArmor || item instanceof InfinityAxe || item instanceof InfinityBow ||
-                item instanceof InfinityHoe || item instanceof InfinityShovel || item instanceof InfinityPickaxe ||
-                item instanceof InfinitySword) {
-            entityItem.setInvulnerable(true); // 设置物品实体不会死亡
-        }
-    }
+//    @SubscribeEvent
+//    public static void entityItemUnDeath(ItemEvent event) { //物品实体事件
+//        ItemEntity entityItem = event.getEntityItem();
+//        Item item = entityItem.getItem().getItem();
+//        if(item instanceof InfinityArmor || item instanceof InfinityAxe || item instanceof InfinityBow ||
+//                item instanceof InfinityHoe || item instanceof InfinityShovel || item instanceof InfinityPickaxe ||
+//                item instanceof InfinitySword) {
+//            entityItem.setInvulnerable(true); // 设置物品实体不会死亡
+//        }
+//    }
 
     //原版掉落修改
     @SubscribeEvent
