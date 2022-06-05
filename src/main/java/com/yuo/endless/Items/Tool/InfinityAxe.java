@@ -1,6 +1,8 @@
 package com.yuo.endless.Items.Tool;
 
+import com.yuo.endless.Config.Config;
 import com.yuo.endless.tab.ModGroup;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.AxeItem;
@@ -14,10 +16,10 @@ import net.minecraftforge.common.ToolType;
 import javax.annotation.Nullable;
 
 public class InfinityAxe extends AxeItem {
-    private ItemHander hander;
+    private final ItemHander hander;
 
     public InfinityAxe() {
-        super(MyItemTier.INFINITY_TOOL, 10, -3.0f, new Properties().group(ModGroup.myGroup).isImmuneToFire());
+        super(MyItemTier.INFINITY_TOOL, 10, -3.0f, new Properties().group(ModGroup.endless).isImmuneToFire());
         this.hander = new ItemHander();
     }
 
@@ -35,9 +37,17 @@ public class InfinityAxe extends AxeItem {
     @Override
     public boolean onBlockStartBreak(ItemStack itemstack, BlockPos pos, PlayerEntity player) {
         if (player.isSneaking() && !player.world.isRemote){
-            hander.aoeBlocks(player.world, pos, player, 64, itemstack, false, true);
+            hander.aoeBlocks(player.world, pos, player, Config.SERVER.axeChainCount.get(), itemstack);
         }
         return false;
+    }
+
+    @Override
+    public float getDestroySpeed(ItemStack stack, BlockState state) {
+        if (state.getHarvestTool() == ToolType.AXE){
+            return 999.0f;
+        }
+        return Math.max(super.getDestroySpeed(stack, state), 6.0f);
     }
 
     @Override

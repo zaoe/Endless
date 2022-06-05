@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
 
 public class InfinityBow extends BowItem {
     public InfinityBow() {
-        super(new Properties().group(ModGroup.myGroup).maxStackSize(1));
+        super(new Properties().group(ModGroup.endless).maxStackSize(1));
     }
 
     //使用时间
@@ -59,6 +59,7 @@ public class InfinityBow extends BowItem {
         InfinityArrowEntity arrow = new InfinityArrowEntity(EntityRegistry.INFINITY_ARROW.get(), player, world);
         arrow.func_234612_a_(player, player.rotationPitch, player.rotationYaw, 0, velocity *  3.0F, 1.0F);
         arrow.setIsCritical(true);
+        arrow.setShooter(player);
 
         world.playSound(null, player.getPosX(), player.getPosY(), player.getPosZ(), SoundEvents.ENTITY_ARROW_SHOOT, SoundCategory.NEUTRAL, 1.0F, 1.0F / (world.rand.nextFloat() * 0.4F + 1.2F) + velocity * 0.5F);
         arrow.pickupStatus = AbstractArrowEntity.PickupStatus.CREATIVE_ONLY;

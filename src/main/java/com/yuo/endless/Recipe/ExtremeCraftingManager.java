@@ -1,7 +1,6 @@
 package com.yuo.endless.Recipe;
 
 import com.yuo.endless.Container.ExtremeCraftInventory;
-import com.yuo.endless.Endless;
 import com.yuo.endless.Items.ItemRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -24,6 +23,78 @@ public class ExtremeCraftingManager {
     //获取实例
     public static ExtremeCraftingManager getInstance() {
         return instance;
+    }
+
+    /**
+     * 添加单个配方 如已有相同配方则不添加
+     * @param recipe 需要添加的配方
+     */
+    public void addRecipe(ExtremeCraftRecipe recipe){
+        Iterator<ExtremeCraftRecipe> iterator = this.recipes.iterator();
+        while (iterator.hasNext()){
+            ExtremeCraftRecipe next = iterator.next();
+            if (next.hasOutput(recipe.getRecipeOutput()) && next.getIngredients().containsAll(recipe.getIngredients())){
+                iterator.remove();
+                return;
+            }
+        }
+        this.recipes.add(recipe);
+    }
+
+    /**
+     * 删除单个配方 根据输出删除
+     * @param output 要删除配方的输出
+     */
+    public void removeRecipe(ItemStack output){
+        Iterator<ExtremeCraftRecipe> iterator = this.recipes.iterator();
+        while (iterator.hasNext()){
+            ExtremeCraftRecipe recipe = iterator.next();
+            if (recipe.hasOutput(output)){
+                iterator.remove();
+                return;
+            }
+        }
+
+    }
+
+    //列表添加 同输出替换
+    void addRecipes(List<ExtremeCraftRecipe> recipeList){
+        Iterator<ExtremeCraftRecipe> iterator = this.recipes.iterator();
+        while (iterator.hasNext()){
+            ExtremeCraftRecipe recipe = iterator.next();
+            for (ExtremeCraftRecipe craftRecipe : recipeList) {
+                if (recipe.hasOutput(craftRecipe.getRecipeOutput())){
+                    iterator.remove();
+                }
+            }
+        }
+
+        this.recipes.addAll(recipeList);
+    }
+
+    /**
+     * 通过json配方添加
+     * @param id 配方id
+     * @param width 配方宽
+     * @param height 高
+     * @param result 输出
+     * @param ingredients 输入列表
+     */
+    void addRecipe(ResourceLocation id, int width, int height, ItemStack result, NonNullList<Ingredient> ingredients){
+        boolean flag = true;
+        Iterator<ExtremeCraftRecipe> iterator = this.recipes.iterator();
+        while (iterator.hasNext()){
+            ExtremeCraftRecipe next = iterator.next();
+            //输出与输入相同
+            if (next.hasOutput(result) && next.getIngredients().containsAll(ingredients)){
+                iterator.remove();
+                recipes.add(new ExtremeCraftRecipe(id, width, height, ingredients, result));
+                flag = false;
+                break;
+            }
+        }
+        if (flag)
+            this.recipes.add(new ExtremeCraftRecipe(id, width, height, ingredients, result));
     }
 
     /**
@@ -58,7 +129,7 @@ public class ExtremeCraftingManager {
 
         for (; i < recipe.length; i += 2) {
             Character character = (Character) recipe[i];
-            Ingredient ingredient = null;
+            Ingredient ingredient;
 
             if (recipe[i + 1] instanceof Item) {
                 ingredient = Ingredient.fromStacks(new ItemStack((Item) recipe[i + 1]));
@@ -91,7 +162,7 @@ public class ExtremeCraftingManager {
                 ingredients.add(Ingredient.EMPTY);
         }
 
-        ExtremeCraftRecipe shapedrecipes = new ExtremeCraftRecipe(new ResourceLocation(Endless.MOD_ID, result.getItem().toString()), width, height, ingredients, result);
+        ExtremeCraftRecipe shapedrecipes = new ExtremeCraftRecipe(result.getItem().getRegistryName(), width, height, ingredients, result);
         this.recipes.add(shapedrecipes);
     }
 
@@ -117,7 +188,7 @@ public class ExtremeCraftingManager {
             }
         }
 
-        ExtremeCraftRecipe recipe = new ExtremeCraftRecipe(ResourceLocation.tryCreate(result.getItem().getName().getString()), 9, 9, getList(arraylist), result);
+        ExtremeCraftRecipe recipe = new ExtremeCraftRecipe(result.getItem().getRegistryName(), 9, 9, getList(arraylist), result);
         this.recipes.add(recipe);
         return recipe;
     }
@@ -208,12 +279,7 @@ public class ExtremeCraftingManager {
                 return recipe.getRemainingItems(inventory);
             }
         }
-
-        NonNullList<ItemStack> nonnulllist = NonNullList.withSize(inventory.getSizeInventory(), ItemStack.EMPTY);
-        for(int i = 0; i < nonnulllist.size(); ++i) {
-            nonnulllist.set(i, inventory.getStackInSlot(i));
-        }
-        return nonnulllist;
+        return NonNullList.withSize(inventory.getSizeInventory(), ItemStack.EMPTY);
     }
 
     /**
@@ -240,7 +306,7 @@ public class ExtremeCraftingManager {
         if (list.size() <= 0) return;
         if (recipe.getIngredients().size() + list.size() > 81) return;
         for (ExtremeCraftRecipe craftRecipe : recipes) {
-            if (craftRecipe.getRecipeOutput().isItemEqual(recipe.getRecipeOutput())){
+            if (craftRecipe.hasOutput(recipe.getRecipeOutput())){
                 craftRecipe.addInputs(getList(list));
             }
         }
@@ -258,7 +324,7 @@ public class ExtremeCraftingManager {
         if (list.size() <= 0) return;
         if (recipe.getIngredients().size() + list.size() > 81) return;
         for (ExtremeCraftRecipe craftRecipe : recipes) {
-            if (craftRecipe.getRecipeOutput().isItemEqual(recipe.getRecipeOutput())){
+            if (craftRecipe.hasOutput(recipe.getRecipeOutput())){
                 craftRecipe.addInputs(list);
             }
         }

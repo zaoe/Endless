@@ -20,10 +20,14 @@ import javax.annotation.Nullable;
 public class ExtremeCraftTile extends TileEntity implements IInventory, INameable {
 
     private NonNullList<ItemStack> items = NonNullList.withSize(81, ItemStack.EMPTY); //存储物品
-    private NonNullList<ItemStack> reslut = NonNullList.withSize(1, ItemStack.EMPTY); //存储合成物品
+    private final NonNullList<ItemStack> reslut = NonNullList.withSize(1, ItemStack.EMPTY); //存储合成物品
 
     public ExtremeCraftTile() {
         super(TileTypeRegistry.EXTREME_CRAFT_TILE.get());
+    }
+
+    public NonNullList<ItemStack> getItems() {
+        return items;
     }
 
     @Override
@@ -38,8 +42,7 @@ public class ExtremeCraftTile extends TileEntity implements IInventory, INameabl
                 return false;
             }
         }
-        if (!this.reslut.get(0).isEmpty()) return false;
-        return true;
+        return this.reslut.get(0).isEmpty();
     }
 
     @Override

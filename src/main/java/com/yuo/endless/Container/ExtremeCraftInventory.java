@@ -2,14 +2,15 @@ package com.yuo.endless.Container;
 
 import com.yuo.endless.Tiles.ExtremeCraftTile;
 import net.minecraft.inventory.CraftingInventory;
+import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 
 public class ExtremeCraftInventory extends CraftingInventory {
     private final NonNullList<ItemStack> stackList;
-    private ExtremeCraftTile craftTile;
-    private Container container;
+    private final ExtremeCraftTile craftTile;
+    private final Container container;
 
     public ExtremeCraftInventory(Container containerIn, ExtremeCraftTile tile) {
         super(containerIn, 9, 9);
@@ -25,25 +26,11 @@ public class ExtremeCraftInventory extends CraftingInventory {
 
     @Override
     public ItemStack decrStackSize(int index, int count) {
-        ItemStack stack = craftTile.getStackInSlot(index);
+        ItemStack stack = ItemStackHelper.getAndSplit(craftTile.getItems(), index, count);
         if (!stack.isEmpty()) {
-            ItemStack itemstack;
-            if (stack.getCount() <= count) {
-                itemstack = stack.copy();
-                craftTile.setInventorySlotContents(index, ItemStack.EMPTY);
-                container.onCraftMatrixChanged(this);
-                return itemstack;
-            } else {
-                itemstack = stack.split(count); //消耗
-                if (stack.getCount() == 0) {
-                    craftTile.setInventorySlotContents(index, ItemStack.EMPTY);
-                }
-                container.onCraftMatrixChanged(this);
-                return itemstack;
-            }
-        } else {
-            return ItemStack.EMPTY;
+            container.onCraftMatrixChanged(this);
         }
+        return stack;
     }
 
     @Override

@@ -1,7 +1,10 @@
 package com.yuo.endless.Items.Tool;
 
+import com.yuo.endless.Config.Config;
 import com.yuo.endless.Event.EventHandler;
 import com.yuo.endless.tab.ModGroup;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
@@ -16,6 +19,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -26,7 +32,7 @@ import java.util.Map;
 public class InfinitySword extends SwordItem{
 
     public InfinitySword() {
-        super(MyItemTier.INFINITY_ARMS, 0, -2.4f, new Properties().group(ModGroup.myGroup).isImmuneToFire());
+        super(MyItemTier.INFINITY_SWORD, 0, -2.4f, new Properties().group(ModGroup.endless).isImmuneToFire());
     }
 
     @Override
@@ -38,6 +44,12 @@ public class InfinitySword extends SwordItem{
             EnchantmentHelper.setEnchantments(map, stack);
             items.add(stack);
         }
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, @Nullable World p_77624_2_, List<ITextComponent> tooltip, ITooltipFlag flag) {
+        tooltip.add(new StringTextComponent(TextFormatting.BLUE + "+" + ColorText.makeFabulous(I18n.format("endless.text.itemInfo.infinity"))
+                + I18n.format("attribute.name.generic.attack_damage")));
     }
 
     @Override
@@ -55,6 +67,14 @@ public class InfinitySword extends SwordItem{
         return false;
     }
 
+    @Override
+    public boolean onLeftClickEntity(ItemStack stack, PlayerEntity player, Entity entity) {
+        if (entity instanceof LivingEntity){
+            hitEntity(stack, (LivingEntity) entity, player);
+        }
+        return false;
+    }
+
     //攻击实体
     @Override
     public boolean hitEntity(ItemStack stack, LivingEntity target, LivingEntity attacker) {
@@ -66,6 +86,7 @@ public class InfinitySword extends SwordItem{
             PlayerEntity player = (PlayerEntity) target;
             if (EventHandler.isInfinite(player)){ //如果玩家穿戴全套无尽装备，则只造成10点伤害
                 player.attackEntityFrom(new InfinityDamageSource(attacker), 10.0f);
+                return true;
             }else player.attackEntityFrom(new InfinityDamageSource(attacker), Float.POSITIVE_INFINITY);
         }
         else target.attackEntityFrom(new InfinityDamageSource(attacker), Float.POSITIVE_INFINITY);
@@ -79,7 +100,7 @@ public class InfinitySword extends SwordItem{
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack heldItem = playerIn.getHeldItem(handIn);
         if (!worldIn.isRemote) {
-            attackAOE(playerIn, 32, 10000, playerIn.isSneaking());
+            attackAOE(playerIn, Config.SERVER.swordAttackRange.get(), Config.SERVER.swordRangeDamage.get(), playerIn.isSneaking() && Config.SERVER.isSwordAttackAnimal.get());
             playerIn.getCooldownTracker().setCooldown(heldItem.getItem(), 20);
         }
         worldIn.playSound(playerIn, playerIn.getPosition(), SoundEvents.ENTITY_PLAYER_LEVELUP , SoundCategory.PLAYERS, 1.0f, 5.0f);
@@ -102,7 +123,7 @@ public class InfinitySword extends SwordItem{
                 if (entity instanceof IMob) {
                     if (entity instanceof EnderDragonEntity){
                         EnderDragonEntity drageon = (EnderDragonEntity) entity;
-                        drageon.attackEntityPartFrom(drageon.dragonPartHead, src, Float.POSITIVE_INFINITY);
+                        drageon.attackEntityPartFrom(drageon.dragonPartHead, src, damage);
                     }else if (entity instanceof WitherEntity){
                         WitherEntity wither = (WitherEntity) entity;
                         wither.setInvulTime(0); //将凋零无敌时间设为0

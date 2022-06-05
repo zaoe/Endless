@@ -22,7 +22,7 @@ import javax.annotation.Nullable;
 
 public class NeutroniumRecipe implements INeutroniumRecipe {
 
-    private NonNullList<ItemStack> inputs; //可压缩物品 压缩效率 推荐为5的倍数
+    private final NonNullList<ItemStack> inputs; //可压缩物品 压缩效率 推荐为5的倍数
     private int count; //数量 可能大于64
     private final ItemStack output;
     private final ResourceLocation id;
@@ -44,10 +44,8 @@ public class NeutroniumRecipe implements INeutroniumRecipe {
         @Override
         public NeutroniumRecipe read(ResourceLocation recipeId, JsonObject json) { //从json中获取信息
             NonNullList<ItemStack> list = NonNullList.create();
-            for (JsonElement inputs : JSONUtils.getJsonArray(json, "inputs")) {
-                list.add(new ItemStack(JSONUtils.getItem(inputs, "item")));
-            }
-
+            ItemStack input = deserializeItem(JSONUtils.getJsonObject(json, "input"));
+            list.add(input);
             int count = JSONUtils.getInt(json, "count");
             ItemStack output = deserializeItem(JSONUtils.getJsonObject(json, "output"));
             return new NeutroniumRecipe(recipeId, list, count, output);
@@ -94,6 +92,11 @@ public class NeutroniumRecipe implements INeutroniumRecipe {
         }
 
         return false;
+    }
+
+    //输出是否相同
+    public boolean hasOutput(ItemStack stack){
+        return output.isItemEqual(stack);
     }
 
     //设置数量

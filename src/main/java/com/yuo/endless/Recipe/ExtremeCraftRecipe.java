@@ -62,10 +62,6 @@ public class ExtremeCraftRecipe implements IExtremeCraftRecipe {
             int j = astring.length;
             NonNullList<Ingredient> nonnulllist = deserializeIngredients(astring, map, i, j);
             ItemStack result = deserializeItem(JSONUtils.getJsonObject(json, "result"));
-//            String type = JSONUtils.getString(json, "type"); 联机错误1
-//            if (!type.equals("endless:extreme_craft")){
-//                throw new IllegalStateException("Type is not found");
-//            }
             return new ExtremeCraftRecipe(recipeId, i, j, nonnulllist, result);
         }
 
@@ -109,47 +105,16 @@ public class ExtremeCraftRecipe implements IExtremeCraftRecipe {
     //检查配方是否与合成台物品栏吻合
     @Override
     public boolean matches(IInventory inv, World worldIn) {
-        for(int i = 0; i <= 9 - this.Width; ++i) {
-            for(int j = 0; j <= 9 - this.Height; ++j) {
-                if (this.checkMatch(inv, i, j, true)) {
-                    return true;
-                }
-
-                if (this.checkMatch(inv, i, j, false)) {
-                    return true;
-                }
-            }
+        int size = items.size();
+        for (int i = 0; i < size; i++){
+            if (!items.get(i).test(inv.getStackInSlot(i))) return false;
         }
-
-        return false;
+        return true;
     }
 
     @Override
     public NonNullList<Ingredient> getIngredients() {
         return items;
-    }
-
-    private boolean checkMatch(IInventory inventory, int width, int height, boolean p_77573_4_) {
-        for(int i = 0; i < 9; ++i) {
-            for(int j = 0; j < 9; ++j) {
-                int k = i - width;
-                int l = j - height;
-                Ingredient ingredient = Ingredient.EMPTY;
-                if (k >= 0 && l >= 0 && k < this.Width && l < this.Height) {
-                    if (p_77573_4_) {
-                        ingredient = this.items.get(this.Width - k - 1 + l * this.Width);
-                    } else {
-                        ingredient = this.items.get(k + l * this.Width);
-                    }
-                }
-
-                if (!ingredient.test(inventory.getStackInSlot(i + j * 9))) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
     }
 
     public boolean isInput(ItemStack stack){
@@ -179,6 +144,11 @@ public class ExtremeCraftRecipe implements IExtremeCraftRecipe {
     @Override
     public ResourceLocation getId() {
         return this.id;
+    }
+
+    //判断输出是否相同
+    public boolean hasOutput(ItemStack stack){
+        return result.isItemEqual(stack);
     }
 
     @Override
@@ -249,7 +219,7 @@ public class ExtremeCraftRecipe implements IExtremeCraftRecipe {
 
         for(Map.Entry<String, JsonElement> entry : json.entrySet()) {
             if (entry.getKey().length() != 1) {
-                throw new JsonSyntaxException("Invalid key entry: '" + (String)entry.getKey() + "' is an invalid symbol (must be 1 character only).");
+                throw new JsonSyntaxException("Invalid key entry: '" + entry.getKey() + "' is an invalid symbol (must be 1 character only).");
             }
 
             if (" ".equals(entry.getKey())) {

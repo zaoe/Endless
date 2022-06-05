@@ -1,11 +1,11 @@
 package com.yuo.endless.Event;
 
 import com.yuo.endless.Armor.InfinityArmor;
+import com.yuo.endless.Config.Config;
 import com.yuo.endless.Endless;
 import com.yuo.endless.Items.ItemRegistry;
-import com.yuo.endless.Items.Tool.InfinityDamageSource;
-import com.yuo.endless.Items.Tool.InfinityPickaxe;
-import com.yuo.endless.Items.Tool.SkullfireSword;
+import com.yuo.endless.Items.MatterCluster;
+import com.yuo.endless.Items.Tool.*;
 import net.minecraft.block.Blocks;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -13,6 +13,7 @@ import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.monster.SkeletonEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -22,30 +23,29 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.util.text.*;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 
 /**
  * 事件处理类
  */
-@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = Endless.MOD_ID)
+@Mod.EventBusSubscriber(modid = Endless.MOD_ID)
 public class EventHandler {
-    public static List<String> playersWithHead = new ArrayList<String>();
-    public static List<String> playersWithChest = new ArrayList<String>();
-    public static List<String> playersWithLegs = new ArrayList<String>();
-    public static List<String> playersWithFeet = new ArrayList<String>();
+    public static List<String> playersWithHead = new ArrayList<>();
+    public static List<String> playersWithChest = new ArrayList<>();
+    public static List<String> playersWithLegs = new ArrayList<>();
+    public static List<String> playersWithFeet = new ArrayList<>();
 
     //无尽鞋子 无摔落伤害
     @SubscribeEvent
@@ -63,24 +63,29 @@ public class EventHandler {
     //无尽装备 不受伤害
     @SubscribeEvent
     public static void opArmsImmuneDamage(LivingDamageEvent event){
-        LivingEntity entityLiving = event.getEntityLiving();
-        if (entityLiving instanceof PlayerEntity){
-            PlayerEntity player = (PlayerEntity) entityLiving;
-            Boolean hasChest = player.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() == ItemRegistry.infinityChest.get();
-            Boolean hasLeg = player.getItemStackFromSlot(EquipmentSlotType.LEGS).getItem() == ItemRegistry.infinityLegs.get();
-            Boolean hasHead = player.getItemStackFromSlot(EquipmentSlotType.HEAD).getItem() == ItemRegistry.infinityHead.get();
-            Boolean hasFeet = player.getItemStackFromSlot(EquipmentSlotType.FEET).getItem() == ItemRegistry.infinityFeet.get();
+        LivingEntity living = event.getEntityLiving();
+        Boolean hasChest = living.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() == ItemRegistry.infinityChest.get();
+        Boolean hasLeg = living.getItemStackFromSlot(EquipmentSlotType.LEGS).getItem() == ItemRegistry.infinityLegs.get();
+        Boolean hasHead = living.getItemStackFromSlot(EquipmentSlotType.HEAD).getItem() == ItemRegistry.infinityHead.get();
+        Boolean hasFeet = living.getItemStackFromSlot(EquipmentSlotType.FEET).getItem() == ItemRegistry.infinityFeet.get();
+        if (living instanceof PlayerEntity){ //怪物无法触发全部伤害减免
+            PlayerEntity player = (PlayerEntity) living;
             if (isInfinite(player)){
-                if (event.getSource() instanceof InfinityDamageSource){
-                    event.setAmount(10);
+                if (InfinityDamageSource.isInfinity(event.getSource())){ //是无尽伤害 减免至10点
+                    ItemStack stack = player.getActiveItemStack();
+                    if (!stack.isEmpty() && isInfinityItem(stack)) { //玩家在使用无尽剑或弓时，不会受伤
+                        event.setAmount(5);
+                    } else event.setAmount(10);
+                } else {
+                    event.setAmount(0);
+                    event.setCanceled(true);
                 }
-                else event.setCanceled(true);
+            }else if (hasChest || hasFeet || hasHead || hasLeg){
+                event.setAmount(event.getAmount() * 0.001f);
             }
-            if (hasChest || hasFeet || hasHead || hasLeg){
-                event.setAmount(event.getAmount() * 0.001f); //减伤99.9%
-            }
+        }else if (hasChest || hasFeet || hasHead || hasLeg){ //怪物也可触发减伤
+            event.setAmount(event.getAmount() * 0.001f); //减伤99.9%
         }
-
     }
     //无尽胸甲 飞行 护腿 行走速度增加
     @SubscribeEvent
@@ -90,10 +95,10 @@ public class EventHandler {
             PlayerEntity player = (PlayerEntity) living;
             ItemStack chest = player.getItemStackFromSlot(EquipmentSlotType.CHEST);
             ItemStack legs = player.getItemStackFromSlot(EquipmentSlotType.LEGS);
-            Boolean hasHead = player.getItemStackFromSlot(EquipmentSlotType.HEAD).getItem() == ItemRegistry.infinityHead.get();
-            Boolean hasChest = chest.getItem() == ItemRegistry.infinityChest.get();
-            Boolean hasLegs = legs.getItem() == ItemRegistry.infinityLegs.get();
-            Boolean hasFeet = player.getItemStackFromSlot(EquipmentSlotType.FEET).getItem() == ItemRegistry.infinityFeet.get();
+            boolean hasHead = player.getItemStackFromSlot(EquipmentSlotType.HEAD).getItem() == ItemRegistry.infinityHead.get();
+            boolean hasChest = chest.getItem() == ItemRegistry.infinityChest.get();
+            boolean hasLegs = legs.getItem() == ItemRegistry.infinityLegs.get();
+            boolean hasFeet = player.getItemStackFromSlot(EquipmentSlotType.FEET).getItem() == ItemRegistry.infinityFeet.get();
             //防止其它模组飞行装备无法使用
             String key = player.getGameProfile().getName()+":"+player.world.isRemote;
             //head
@@ -108,16 +113,19 @@ public class EventHandler {
             }
             //chest
             if (playersWithChest.contains(key)) {
+                ModifiableAttributeInstance attribute = player.getAttribute(Attributes.FLYING_SPEED);
                 if (hasChest) {
                     player.abilities.allowFlying = true;
-                    if (chest.hasTag() && chest.getTag().getBoolean("flag"))
-                        player.abilities.setFlySpeed(0.1f); //飞行速度2倍
+                    if (chest.getOrCreateTag().getBoolean("flag") && attribute != null && !attribute.hasModifier(InfinityArmor.modifierFly)){
+                        attribute.applyPersistentModifier(InfinityArmor.modifierFly); //飞行速度2倍
+                    }
                 }else {
                     if (!player.isCreative()) {
                         player.abilities.allowFlying = false;
                         player.abilities.isFlying = false;
-                        player.abilities.setFlySpeed(0.05f);
                     }
+                    if (attribute != null && attribute.hasModifier(InfinityArmor.modifierFly))
+                        attribute.removeModifier(InfinityArmor.modifierFly);
                     playersWithChest.remove(key);
                 }
             }else if (hasChest) {
@@ -125,13 +133,13 @@ public class EventHandler {
             }
             //legs
             if (playersWithLegs.contains(key)) {
+                ModifiableAttributeInstance attribute = player.getAttribute(Attributes.MOVEMENT_SPEED);
                 if (hasLegs) {
-//                    player.abilities.setWalkSpeed(0.3f);
-                    if (legs.hasTag() && legs.getTag().getBoolean("flag"))
-                        player.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.3f); //行走速度
-                } else {
-//                    player.abilities.setWalkSpeed(0.1f);
-                    player.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.1f);
+                    if (legs.getOrCreateTag().getBoolean("flag") && attribute != null && !attribute.hasModifier(InfinityArmor.modifierWalk))
+                        attribute.applyPersistentModifier(InfinityArmor.modifierWalk); //行走速度
+                }else {
+                    if (attribute != null && attribute.hasModifier(InfinityArmor.modifierWalk))
+                        attribute.removeModifier(InfinityArmor.modifierWalk);
                     playersWithLegs.remove(key);
                 }
             } else if (hasLegs) {
@@ -158,7 +166,7 @@ public class EventHandler {
             PlayerEntity player = (PlayerEntity)living;
             String key = player.getGameProfile().getName()+":"+player.world.isRemote;
             ItemStack feet = player.getItemStackFromSlot(EquipmentSlotType.FEET);
-            if (playersWithFeet.contains(key) && feet.hasTag() && feet.getTag().getBoolean("flag")) {
+            if (playersWithFeet.contains(key) && feet.hasTag() && feet.getOrCreateTag().getBoolean("flag")) {
                 player.setMotion(0, 1.0f, 0);
             }
         }
@@ -169,27 +177,16 @@ public class EventHandler {
     public static void opTool(PlayerEvent.ItemCraftedEvent event){
         ItemStack stack = event.getCrafting();
         if (stack.getItem().equals(ItemRegistry.infinitySword.get())){
-            Map<Enchantment, Integer> map = new HashMap<Enchantment, Integer>();
+            Map<Enchantment, Integer> map = new HashMap<>();
             map.put(Enchantments.LOOTING, 10);
             EnchantmentHelper.setEnchantments( map, stack);
         }
         if (stack.getItem().equals(ItemRegistry.infinityPickaxe.get())){
-            Map<Enchantment, Integer> map = new HashMap<Enchantment, Integer>();
+            Map<Enchantment, Integer> map = new HashMap<>();
             map.put(Enchantments.FORTUNE, 10);
             EnchantmentHelper.setEnchantments( map, stack);
         }
     }
-    //不会被烧毁的物品
-//    @SubscribeEvent
-//    public static void entityItemUnDeath(ItemEvent event) { //物品实体事件
-//        ItemEntity entityItem = event.getEntityItem();
-//        Item item = entityItem.getItem().getItem();
-//        if(item instanceof InfinityArmor || item instanceof InfinityAxe || item instanceof InfinityBow ||
-//                item instanceof InfinityHoe || item instanceof InfinityShovel || item instanceof InfinityPickaxe ||
-//                item instanceof InfinitySword) {
-//            entityItem.setInvulnerable(true); // 设置物品实体不会死亡
-//        }
-//    }
 
     //原版掉落修改
     @SubscribeEvent
@@ -215,7 +212,7 @@ public class EventHandler {
         World world = event.getWorld();
         PlayerEntity player = event.getPlayer();
         if (stack.getItem() instanceof InfinityPickaxe && world.getBlockState(pos).getBlock().equals(Blocks.BEDROCK)){
-            if (stack.hasTag() && stack.getTag().getBoolean("hammer")){
+            if (Config.SERVER.isBreakBedrock.get() && stack.getOrCreateTag().getBoolean("hammer")){
                 world.addEntity(new ItemEntity(world, player.getPosX(), player.getPosY(), player.getPosZ(), new ItemStack(Blocks.BEDROCK)));
                 world.setBlockState(pos, Blocks.AIR.getDefaultState());
             }
@@ -226,7 +223,7 @@ public class EventHandler {
     public static void onDeath(LivingDeathEvent event) { //不能被无尽伤害外的攻击杀死
         if (event.getEntityLiving() instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) event.getEntityLiving();
-            if (isInfinite(player) && !(event.getSource() instanceof InfinityDamageSource)) {
+            if (isInfinite(player) && !InfinityDamageSource.isInfinity(event.getSource())) {
                 event.setCanceled(true);
                 player.setHealth(player.getMaxHealth());
             }
@@ -252,14 +249,18 @@ public class EventHandler {
             return;
         }
         PlayerEntity player = (PlayerEntity) event.getEntityLiving();
-        ItemStack mainhand = player.getHeldItemMainhand();
-        if (!mainhand.isEmpty() && (mainhand.getItem() == ItemRegistry.infinitySword.get() || mainhand.getItem() == ItemRegistry.infinityBow.get())
-                && player.isHandActive()) {
+        ItemStack stack = player.getActiveItemStack();
+        if (!stack.isEmpty() && isInfinityItem(stack)) { //玩家在使用无尽剑或弓时，不会受伤
+            event.setAmount(10);
             event.setCanceled(true);
         }
-        if (isInfinite(player) && !(event.getSource() instanceof InfinityDamageSource)) {
+        if (isInfinite(player) && !InfinityDamageSource.isInfinity(event.getSource())) {
             event.setCanceled(true);
         }
+    }
+
+    static boolean isInfinityItem(ItemStack stack){
+        return stack.getItem() == ItemRegistry.infinitySword.get() || stack.getItem() == ItemRegistry.infinityBow.get();
     }
 
     //玩家不会被无尽伤害外攻击
@@ -272,19 +273,22 @@ public class EventHandler {
             return;
         }
         PlayerEntity player = (PlayerEntity) event.getEntityLiving();
-        if (isInfinite(player) && !(event.getSource()instanceof InfinityDamageSource)) {
+        if (isInfinite(player) && !InfinityDamageSource.isInfinity(event.getSource())) {
             event.setCanceled(true);
         }
         String key = player.getGameProfile().getName()+":"+player.world.isRemote;
         if (event.getSource().isFireDamage() && playersWithLegs.contains(key)){
             event.setCanceled(true);
         }
+        if (event.getSource().isMagicDamage() && playersWithChest.contains(key)){
+            event.setCanceled(true);
+        }
     }
 
     /**
      * 判断玩家是否穿戴全套无尽装备
-     * @param player
-     * @return
+     * @param player 玩家
+     * @return 结果
      */
     public static boolean isInfinite(PlayerEntity player) {
         for (EquipmentSlotType slot : EquipmentSlotType.values()) {
@@ -307,6 +311,10 @@ public class EventHandler {
         player.sendMessage(new TranslationTextComponent("endless.message.login")
                 .setStyle(Style.EMPTY.setHoverEvent(HoverEvent.Action.SHOW_TEXT.deserialize(new TranslationTextComponent("endless.message.login0")))
                         .setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://space.bilibili.com/21854371"))), UUID.randomUUID());
+        if (Config.errorInfo.size() > 0){
+            player.sendMessage(new StringTextComponent("The following errors were found in the configuration file:\n"
+                    + StringUtils.join(Config.errorInfo.toArray(), ",")).setStyle(Style.EMPTY.setColor(Color.fromTextFormatting(TextFormatting.RED))), UUID.randomUUID());
+        }
     }
 
     //恒星燃料
@@ -318,11 +326,43 @@ public class EventHandler {
         }
     }
 
-//    @SubscribeEvent
-//    public static void recipeChange(DifficultyChangeEvent event){
-//        Difficulty difficulty = event.getDifficulty();
-//        CompressorManager.changeAllCount(difficulty);
-//    }
+    //物质团合并
+    @SubscribeEvent
+    public static void matterClusterAdd(PlayerEvent.ItemPickupEvent event){
+        PlayerEntity player = event.getPlayer();
+        ItemStack stack = event.getStack();
+        if (player != null && stack.getItem() == ItemRegistry.matterCluster.get() && Config.SERVER.isMergeMatterCluster.get()){
+            int slot = player.inventory.getSlotFor(stack);
+            if (MatterCluster.mergeMatterCluster(stack, player, slot)){
+                player.inventory.removeStackFromSlot(slot);
+            }
+        }
+    }
+
+    //无尽镐锤形态 潜行左键删除方块
+    @SubscribeEvent
+    public static void removeBlock(PlayerInteractEvent.LeftClickBlock event){
+        PlayerEntity player = event.getPlayer();
+        ItemStack stack = event.getItemStack();
+        if (stack.getItem() instanceof InfinityPickaxe && stack.getOrCreateTag().getBoolean("hammer")){
+            if (player.isSneaking() && Config.SERVER.isRemoveBlock.get()){
+                BlockPos pos = event.getPos();
+                World world = event.getWorld();
+                world.removeBlock(pos, true);
+            }
+        }
+    }
+
+    /**
+     * 物品是否属于无尽物品
+     * @param item 物品
+     * @return 是 true
+     */
+    private  static boolean isInfinityItem(Item item){
+        return item instanceof InfinityAxe || item instanceof InfinityBow || item instanceof InfinityHoe || item instanceof InfinityPickaxe ||
+                item instanceof InfinityShovel || item instanceof InfinitySword || item instanceof InfinityArmor;
+    }
+
     /**
      * 添加额外掉落
      * @param item 需要掉落的物品

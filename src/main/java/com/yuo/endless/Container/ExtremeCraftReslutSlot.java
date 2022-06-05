@@ -28,8 +28,11 @@ public class ExtremeCraftReslutSlot extends CraftingResultSlot {
         net.minecraftforge.common.ForgeHooks.setCraftingPlayer(thePlayer);
         NonNullList<ItemStack> nonnulllist; //优先匹配工作台配方，没有则配方无尽配方
         Optional<ICraftingRecipe> optional = thePlayer.world.getRecipeManager().getRecipe(IRecipeType.CRAFTING, this.craftMatrix, thePlayer.world);
-        nonnulllist = optional.map(iCraftingRecipe -> iCraftingRecipe.getRemainingItems(this.craftMatrix)).orElseGet(
-                () -> ExtremeCraftingManager.getInstance().getRecipeShirkItem((ExtremeCraftInventory) this.craftMatrix, thePlayer.world));
+        if (optional.isPresent()){
+            nonnulllist = thePlayer.world.getRecipeManager().getRecipeNonNull(IRecipeType.CRAFTING, this.craftMatrix, thePlayer.world);
+        }else {
+            nonnulllist = ExtremeCraftingManager.getInstance().getRecipeShirkItem((ExtremeCraftInventory) this.craftMatrix, thePlayer.world);
+        }
         net.minecraftforge.common.ForgeHooks.setCraftingPlayer(null);
 
         for(int i = 0; i < nonnulllist.size(); ++i) {
