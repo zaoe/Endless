@@ -11,11 +11,11 @@ import net.minecraft.inventory.IRecipeHelperPopulator;
 import net.minecraft.inventory.container.RecipeBookContainer;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.*;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.RecipeBookCategory;
+import net.minecraft.item.crafting.RecipeItemHelper;
 import net.minecraft.network.play.server.SSetSlotPacket;
 import net.minecraft.world.World;
-
-import java.util.Optional;
 
 public class ExtremeCraftContainer extends RecipeBookContainer<CraftingInventory> {
 
@@ -62,20 +62,9 @@ public class ExtremeCraftContainer extends RecipeBookContainer<CraftingInventory
     public void onCraftMatrixChanged(IInventory matrix) {
         if (world.isRemote) return;
         ServerPlayerEntity serverPlayer = (ServerPlayerEntity)player;
-        //获取配方
-        Optional<ICraftingRecipe> optional = world.getServer().getRecipeManager().getRecipe(IRecipeType.CRAFTING, inputInventory, world);
-        if (optional.isPresent()) {
-            ICraftingRecipe recipe = optional.get();
-            if (outputInventory.canUseRecipe(world, serverPlayer, recipe)) {
-                ItemStack itemstack = recipe.getCraftingResult(inputInventory); //获取配方输出
-                outputInventory.setInventorySlotContents(81, itemstack);
-                serverPlayer.connection.sendPacket(new SSetSlotPacket(windowId, 81, itemstack)); //发包同步数据
-            }
-        }else {
-            ItemStack outPut = ExtremeCraftingManager.getInstance().getRecipeOutPut(inputInventory, world);
-            outputInventory.setInventorySlotContents(81, outPut);
-            serverPlayer.connection.sendPacket(new SSetSlotPacket(windowId, 81, outPut)); //发包同步数据
-        }
+        ItemStack outPut = ExtremeCraftingManager.getInstance().getRecipeOutPut(inputInventory, world);
+        outputInventory.setInventorySlotContents(81, outPut);
+        serverPlayer.connection.sendPacket(new SSetSlotPacket(windowId, 81, outPut)); //发包同步数据
     }
 
     @Override

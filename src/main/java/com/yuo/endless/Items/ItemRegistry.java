@@ -38,6 +38,7 @@ public class ItemRegistry {
 	public static RegistryObject<Item> neutroniumGear = ITEMS.register("neutronium_gear", OrdinaryItem::new);
 	public static RegistryObject<Item> starFuel = ITEMS.register("star_fuel", OrdinaryItem::new);
 	public static RegistryObject<Item> infinityNugget = ITEMS.register("infinity_nugget", OrdinaryItem::new);
+	public static RegistryObject<Item> infinityArrow = ITEMS.register("infinity_arrow", InfinityArrow::new);
 
 	//奇点
 	public static RegistryObject<Item> singularityCoal = ITEMS.register("singularity_coal",
@@ -117,6 +118,10 @@ public class ItemRegistry {
 			() -> new BlockItem(BlockRegistry.tripleNeutronCollector.get(), new Item.Properties().group(ModGroup.endless)));
 	public static RegistryObject<BlockItem> neutroniumCompressor = ITEMS.register("neutronium_compressor",
 			() -> new BlockItem(BlockRegistry.neutroniumCompressor.get(), new Item.Properties().group(ModGroup.endless)));
+	public static RegistryObject<BlockItem> compressorChest = ITEMS.register("compressor_chest",
+			() -> new BlockItem(BlockRegistry.compressorChest.get(), new Item.Properties().group(ModGroup.endless)));
+	public static RegistryObject<BlockItem> infinityBox = ITEMS.register("infinity_box",
+			() -> new BlockItem(BlockRegistry.infinityBox.get(), new Item.Properties().group(ModGroup.endless)));
 
 	//强力装备 联动奇点
 	public static RegistryObject<Item> singularityRuby;

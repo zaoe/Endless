@@ -3,7 +3,7 @@ loaderVersion="[35,)"
 license="All rights reserved"
 [[mods]] #mandatory
 modId="endless"
-version="1.16.4-1.2.3"
+version="1.16.4-1.2.4"
 displayName="Endless"
 authors="yuo"
 description='''
@@ -68,5 +68,17 @@ description='''
     modId="botania"
     mandatory=true
     versionRange="[1.16.4-414, )"
+    ordering="AFTER"
+    side="BOTH"
+[[dependencies.projecte]]
+    modId="projecte"
+    mandatory=true
+    versionRange="[1.16.5-PE1.0.2, )"
+    ordering="AFTER"
+    side="BOTH"
+[[dependencies.twilightforest]]
+    modId="twilightforest"
+    mandatory=true
+    versionRange="[4.0.546, )"
     ordering="AFTER"
     side="BOTH"

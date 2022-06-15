@@ -7,7 +7,6 @@ import com.yuo.endless.Config.Config;
 import com.yuo.endless.Endless;
 import com.yuo.endless.Items.ItemRegistry;
 import com.yuo.spacearms.Blocks.BlockRegistry;
-import moze_intel.projecte.gameObjs.registries.PEBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.ItemStack;
@@ -498,6 +497,21 @@ public class    ModRecipeManager {
                     'W', ItemTags.LOGS);
         }
 
+        ExtremeCraftingManager.getInstance().addRecipe(new ItemStack(ItemRegistry.infinityArrow.get()),
+                "XY       ",
+                "YYYY     ",
+                " YZ      ",
+                " Y Z     ",
+                "    Z    ",
+                "     Z   ",
+                "      AA ",
+                "      AAA",
+                "       A ",
+                'X', new ItemStack(ItemRegistry.infinityNugget.get()),
+                'Y', new ItemStack(ItemRegistry.infinityIngot.get()),
+                'Z', new ItemStack(ItemRegistry.neutroniumIngot.get()),
+                'A', new ItemStack(ItemRegistry.crystalMatrixIngot.get()));
+
 
         ExtremeCraftingManager.getInstance().addRecipe(new ItemStack(ItemRegistry.endestPearl.get()),
                 "   EEE   ",
@@ -644,10 +658,10 @@ public class    ModRecipeManager {
                         new ItemStack(block));
             }
         }
-        if (Endless.isProjecte){
-            ExtremeCraftingManager.getInstance().addRecipeInput(infinityCatalyst,
-                    new ItemStack(PEBlocks.RED_MATTER));
-        }
+//        if (Endless.isProjecte){
+//            ExtremeCraftingManager.getInstance().addRecipeInput(infinityCatalyst,
+//                    new ItemStack(PEBlocks.RED_MATTER));
+//        }
         if (Endless.isTheTwilightForest){
             ExtremeCraftingManager.getInstance().addRecipeInput(infinityCatalyst,
                     new ItemStack(TFBlocks.ironwood_block.get()));
