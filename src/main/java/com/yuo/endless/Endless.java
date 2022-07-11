@@ -50,12 +50,13 @@ public class Endless {
     public static boolean isTheTwilightForest = false; //暮色森林
     public static boolean isAstralSorcery = false; //星辉魔法
     public static boolean isSlashBlade2 = false; //拔刀剑2
-    public static boolean isThermalSeries = false; //热力系列
+    public static boolean isThermal = false; //热力系列
     public static boolean isTimeBottle = false; //时间之瓶
     public static boolean isDraconicEvolution = false; //龙之进化
     public static boolean isInfernalMobs = false; //稀有精英怪
     public static boolean isChampions = false; //冠军/强敌
     public static boolean isZombieAwareness = false; //僵尸意识
+    public static boolean isMysticalAgriculture = false; //神秘农业
     public static final IProxy proxy = DistExecutor.safeRunForDist(() -> ClientProxy::new, () -> CommonProxy::new);
 	public Endless() {
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.COMMON_CONFIG); //配置文件
@@ -115,12 +116,13 @@ public class Endless {
         isTheTwilightForest = checkMod("twilightforest");
         isAstralSorcery = checkMod("astralsorcery");
         isSlashBlade2 = checkMod("slashblade");
-        isThermalSeries = checkMod("thermal");
+        isThermal = checkMod("thermal");
         isTimeBottle = checkMod("tiab");
         isDraconicEvolution = checkMod("draconicevolution");
         isInfernalMobs = checkMod("infernalmobs");
         isChampions = checkMod("champions");
         isZombieAwareness = checkMod("zombieawareness");
+        isMysticalAgriculture = checkMod("mysticalagriculture");
     }
 
     /**

@@ -12,6 +12,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.boss.WitherEntity;
 import net.minecraft.entity.boss.dragon.EnderDragonEntity;
+import net.minecraft.entity.item.ArmorStandEntity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemGroup;
@@ -21,7 +22,6 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -48,13 +48,12 @@ public class InfinitySword extends SwordItem{
 
     @Override
     public void addInformation(ItemStack stack, @Nullable World p_77624_2_, List<ITextComponent> tooltip, ITooltipFlag flag) {
-        tooltip.add(new StringTextComponent(TextFormatting.BLUE + "+" + ColorText.makeFabulous(I18n.format("endless.text.itemInfo.infinity"))
-                + I18n.format("attribute.name.generic.attack_damage")));
+        tooltip.add(new StringTextComponent(ColorText.makeFabulous(I18n.format("endless.text.itemInfo.infinity")) + I18n.format("attribute.name.generic.attack_damage")));
     }
 
     @Override
-    public int getItemEnchantability() {
-        return 0;
+    public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
+        return false;
     }
 
     @Override
@@ -67,31 +66,28 @@ public class InfinitySword extends SwordItem{
         return false;
     }
 
-    @Override
-    public boolean onLeftClickEntity(ItemStack stack, PlayerEntity player, Entity entity) {
-        if (entity instanceof LivingEntity){
-            hitEntity(stack, (LivingEntity) entity, player);
-        }
-        return false;
-    }
-
     //攻击实体
     @Override
     public boolean hitEntity(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         if (attacker.world.isRemote) return true;
         if (target instanceof EnderDragonEntity && attacker instanceof PlayerEntity){
-            EnderDragonEntity drageon = (EnderDragonEntity) target; //攻击末影龙
-            drageon.attackEntityPartFrom(drageon.dragonPartHead, new InfinityDamageSource(attacker), Float.POSITIVE_INFINITY);
-        }else if (target instanceof PlayerEntity){
+            EnderDragonEntity dragon = (EnderDragonEntity) target; //攻击末影龙
+            dragon.attackEntityPartFrom(dragon.dragonPartHead, new InfinityDamageSource(attacker), Float.POSITIVE_INFINITY);
+        }else if (target instanceof WitherEntity){
+            WitherEntity wither = (WitherEntity) target;
+            wither.setInvulTime(0);
+            wither.attackEntityFrom(new InfinityDamageSource(attacker), Float.POSITIVE_INFINITY);
+        } else if (target instanceof ArmorStandEntity){
+            target.attackEntityFrom(DamageSource.GENERIC, 10);
+            return true;
+        }else target.attackEntityFrom(new InfinityDamageSource(attacker), Float.POSITIVE_INFINITY);
+        if (target instanceof PlayerEntity){
             PlayerEntity player = (PlayerEntity) target;
-            if (EventHandler.isInfinite(player)){ //如果玩家穿戴全套无尽装备，则只造成10点伤害
-                player.attackEntityFrom(new InfinityDamageSource(attacker), 10.0f);
+            if (EventHandler.isInfinite(player)){ //玩家穿戴全套无尽 则不执行死亡
                 return true;
-            }else player.attackEntityFrom(new InfinityDamageSource(attacker), Float.POSITIVE_INFINITY);
+            }
         }
-        else target.attackEntityFrom(new InfinityDamageSource(attacker), Float.POSITIVE_INFINITY);
         target.setHealth(0);
-        target.onDeath(new InfinityDamageSource(attacker));
         return true;
     }
 
@@ -106,33 +102,41 @@ public class InfinitySword extends SwordItem{
         worldIn.playSound(playerIn, playerIn.getPosition(), SoundEvents.ENTITY_PLAYER_LEVELUP , SoundCategory.PLAYERS, 1.0f, 5.0f);
         return ActionResult.resultSuccess(heldItem);
     }
+
     //aoe伤害
-    protected void attackAOE(PlayerEntity player,float range, float damage,boolean type)
-    {
+    protected void attackAOE(PlayerEntity player,float range, float damage,boolean type) {
         if (player.world.isRemote) return;
         AxisAlignedBB aabb = player.getBoundingBox().grow(range);//范围
         List<Entity> toAttack = player.getEntityWorld().getEntitiesWithinAABBExcludingEntity(player, aabb);//生物列表
         DamageSource src = new InfinityDamageSource(player);//伤害类型
         for (Entity entity : toAttack) { //循环遍历
-            if(type) {
-                if(entity instanceof LivingEntity) {
-                    entity.attackEntityFrom(src, damage);//给与实体伤害
-                }
-            }
-            else {
-                if (entity instanceof IMob) {
-                    if (entity instanceof EnderDragonEntity){
-                        EnderDragonEntity drageon = (EnderDragonEntity) entity;
-                        drageon.attackEntityPartFrom(drageon.dragonPartHead, src, damage);
-                    }else if (entity instanceof WitherEntity){
-                        WitherEntity wither = (WitherEntity) entity;
-                        wither.setInvulTime(0); //将凋零无敌时间设为0
-                        wither.attackEntityFrom(src, damage);
+            if (entity instanceof LivingEntity){
+                if(type) { //潜行攻击所有生物
+                    attackEntity(entity, src, damage);
+                } else {
+                    if (entity instanceof IMob) {
+                        attackEntity(entity, src, damage);
                     }
-                    else entity.attackEntityFrom(src, damage);
                 }
             }
         }
+    }
+
+    /**
+     * 攻击原版生物
+     * @param entity 生物
+     * @param src 伤害类型
+     * @param damage 伤害值
+     */
+    private void attackEntity(Entity entity, DamageSource src, float damage){
+        if (entity instanceof EnderDragonEntity){
+            EnderDragonEntity dragon = (EnderDragonEntity) entity;
+            dragon.attackEntityPartFrom(dragon.dragonPartHead, src, damage);
+        }else if (entity instanceof WitherEntity){
+            WitherEntity wither = (WitherEntity) entity;
+            wither.setInvulTime(0); //将凋零无敌时间设为0
+            wither.attackEntityFrom(src, damage);
+        }else entity.attackEntityFrom(src, damage);//给与实体伤害
     }
 
     @Nullable

@@ -1,21 +1,21 @@
 package com.yuo.endless.Proxy;
 
+import com.yuo.endless.Config.Config;
 import com.yuo.endless.Container.ContainerTypeRegistry;
 import com.yuo.endless.Endless;
 import com.yuo.endless.Entity.EntityRegistry;
 import com.yuo.endless.Gui.*;
 import com.yuo.endless.Items.ItemRegistry;
 import com.yuo.endless.Items.MatterCluster;
-import com.yuo.endless.Render.EndlessChestTileRender;
-import com.yuo.endless.Render.GapingVoidRender;
-import com.yuo.endless.Render.InfinityArrowRender;
-import com.yuo.endless.Render.InfinityArrowSubRender;
+import com.yuo.endless.Items.Tool.InfinityCrossBow;
+import com.yuo.endless.Render.*;
 import com.yuo.endless.Tiles.TileTypeRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.entity.SpriteRenderer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemModelsProperties;
+import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -35,6 +35,7 @@ public class ClientProxy implements IProxy {
     public void clientSetup(final FMLClientSetupEvent event) {
         event.enqueueWork(() ->{
             setBowProperty(ItemRegistry.infinityBow.get());
+            setCrossBowProperty(ItemRegistry.infinityCrossBow.get());
             setMatterClusterProperty(ItemRegistry.matterCluster.get());
             setInfinityToolProperty(ItemRegistry.infinityPickaxe.get(), "hammer");
             setInfinityToolProperty(ItemRegistry.infinityShovel.get(), "destroyer");
@@ -77,6 +78,8 @@ public class ClientProxy implements IProxy {
     private void registerEntityRender(){
         RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.ENDEST_PEARL.get(), manager -> new SpriteRenderer<>(manager, Minecraft.getInstance().getItemRenderer())); //投掷物渲染
         RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.INFINITY_ARROW.get(), InfinityArrowRender::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.INFINITY_CROSS_ARROW.get(), InfinityArrowRender::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.INFINITY_FIREWORK.get(), InfinityFireWorkRender::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.INFINITY_ARROW_SUB.get(), InfinityArrowSubRender::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.GAPING_VOID.get(), GapingVoidRender::new); //渲染实体
     }
@@ -96,9 +99,28 @@ public class ClientProxy implements IProxy {
                 "pulling"), (itemStack, clientWorld, livingEntity) -> livingEntity != null && livingEntity.isHandActive() && livingEntity.getActiveItemStack() == itemStack ? 1.0F : 0.0F);
     }
 
+    private void setCrossBowProperty(Item item){
+        ItemModelsProperties.registerProperty(item, new ResourceLocation(Endless.MOD_ID,
+                "pull"), (itemStack, clientWorld, livingEntity) -> {
+            if (livingEntity == null) {
+                return 0.0F;
+            } else {
+                return InfinityCrossBow.isCharged(itemStack) ? 0.0F : (float)(itemStack.getUseDuration() - livingEntity.getItemInUseCount()) / (float) InfinityCrossBow.getChargeTime();
+            }
+        });
+        ItemModelsProperties.registerProperty(item, new ResourceLocation(Endless.MOD_ID,
+                "pulling"), (itemStack, clientWorld, livingEntity) -> livingEntity != null && livingEntity.isHandActive() && livingEntity.getActiveItemStack() == itemStack ? 1.0F : 0.0F);
+
+        ItemModelsProperties.registerProperty(item, new ResourceLocation(Endless.MOD_ID,
+                "charged"), (itemStack, clientWorld, livingEntity) -> livingEntity != null && InfinityCrossBow.isCharged(itemStack) ? 1f : 0f);
+        ItemModelsProperties.registerProperty(item, new ResourceLocation(Endless.MOD_ID,
+                "firework"), (itemStack, clientWorld, livingEntity) -> livingEntity != null && InfinityCrossBow.isCharged(itemStack) && InfinityCrossBow.hasChargedProjectile(itemStack, Items.FIREWORK_ROCKET) ? 1f : 0f);
+    }
+
     private void setMatterClusterProperty(Item item){
         ItemModelsProperties.registerProperty(item, new ResourceLocation(Endless.MOD_ID,
-                "count"), (itemStack, clientWorld, livingEntity) -> MatterCluster.getItemTag(itemStack).size() > 0 ? 1f:0f);
+                "count"), (itemStack, clientWorld, livingEntity) -> MatterCluster.getItemTag(itemStack).size() > 0 ?
+                (MatterCluster.getItemTag(itemStack).size() == Config.SERVER.matterClusterMaxTerm.get() ? 1f : 0.5f) :0f);
     }
 
 

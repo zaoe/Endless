@@ -1,19 +1,25 @@
 buildscript {
     repositories {
-        maven { url = 'https://files.minecraftforge.net/maven' }
-        jcenter()
+        maven {
+            url 'https://maven.aliyun.com/repository/public/' //阿里云仓库
+        }
+        maven { url 'https://maven.aliyun.com/repository/central'}
+        maven {
+            name = 'Forge'
+            url = 'https://maven.minecraftforge.net'
+        }
+        mavenLocal()
         mavenCentral()
-        maven { url = 'https://repo.spongepowered.org/repository/maven-public/' } //
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.+', changing: true
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = "1.16.4-1.2.5"
+version = "1.16.4-1.2.6"
 group = 'com.github.yuoft' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'Endless'
 
@@ -35,7 +41,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             mods {
-                examplemod {
+                endless {
                     source sourceSets.main
                 }
             }
@@ -51,7 +57,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             mods {
-                examplemod {
+                endless {
                     source sourceSets.main
                 }
             }
@@ -67,10 +73,10 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
-            args '--mod', 'examplemod', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+            args '--mod', 'endless', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
 
             mods {
-                examplemod {
+                endless {
                     source sourceSets.main
                 }
             }
@@ -118,27 +124,29 @@ repositories {
 dependencies {
     minecraft 'net.minecraftforge:forge:1.16.4-35.1.4'
 
-    compile "mezz.jei:jei-1.16.4:7.6.1.73" //引入mod API
+    compileOnly fg.deobf("mezz.jei:jei-1.16.4:7.6.1.73") //引入mod API
     runtimeOnly fg.deobf("curse.maven:jei-238222:3245003") //引入mod
     //前置
 //    runtimeOnly fg.deobf("com.github.alexthe666.citadel:citadel:1.6.2")
 //    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.16.4-4.0.3.5")
 //    compile fg.deobf('vazkii.patchouli:Patchouli:1.16.4-51')
 
-    compileOnly fg.deobf("com.yuo.spacearms:spacearms:1.16.4-1.3.7") //联动
-    compileOnly fg.deobf("com.yuo.orecrop:orecrop:1.16.4-1.2.3")
-    compileOnly fg.deobf("com.yuo.paimeng:paimeng:1.16.4-1.1.3")
-    compileOnly fg.deobf("com.yuo.yuoenchants:yuoenchants:1.16.4-1.3.0")
-    compileOnly fg.deobf("com.yuo.morecoal:morecoal:1.0.0")
-//    compileOnly fg.deobf("curse.maven:projecte-226410:3736621:api")
-    compileOnly fg.deobf("vazkii.botania:Botania:1.16.4-414:api")
-    compileOnly fg.deobf("vazkii.botania:Botania:1.16.4-414")
-    compileOnly fg.deobf("com.github.alexthe666.iceandfire:iceandfire:2.1.6-1.16.4")
-    compileOnly fg.deobf("appeng:appliedenergistics2:8.2.0")
-//    compileOnly("com.brandon3055.draconicevolution:Draconic-Evolution:1.16.5-3.0.25.456-universal")
-    compileOnly fg.deobf("java.moze_intel:projecte:1.16.5-PE1.0.2")
-//    compileOnly("curse.maven:projecte-226410:PE1.0.2")
-    compileOnly fg.deobf("teamtwilight:twilightforest:4.0.546:universal")
+    compileOnly("com.yuo.spacearms:spacearms:1.16.4-1.3.7") //联动
+    compileOnly("com.yuo.orecrop:orecrop:1.16.4-1.2.3")
+    compileOnly("com.yuo.paimeng:paimeng:1.16.4-1.1.3")
+    compileOnly("com.yuo.yuoenchants:yuoenchants:1.16.4-1.3.0")
+    compileOnly("com.yuo.morecoal:morecoal:1.0.0")
+    compileOnly("vazkii.botania:Botania:1.16.4-414:api")
+    compileOnly("vazkii.botania:Botania:1.16.4-414")
+    compileOnly("com.github.alexthe666.iceandfire:iceandfire:2.1.6-1.16.4")
+    compileOnly("appeng:appliedenergistics2:8.2.0")
+    compileOnly("java.moze_intel:projecte:1.16.5-PE1.0.2")
+    compileOnly("teamtwilight:twilightforest:4.0.546:universal")
+
+    compileOnly("curse.maven:create-328085:3278516")
+    compileOnly("curse.maven:astral-sorcery-241721:3156477")
+    compileOnly("curse.maven:slashblade-241596:3283974")
+    compileOnly("curse.maven:mystical-agriculture-246640:3113053")
 
 //    runtimeOnly fg.deobf("com.yuo.spacearms:spacearms:1.16.4-1.3.7")
 //    runtimeOnly fg.deobf("com.yuo.orecrop:orecrop:1.16.4-1.2.3")

@@ -33,6 +33,12 @@
   "item.endless.singularity_ultra":"§eSingularity Ultra",
   "item.endless.singularity_silver":"§eSingularity Silver",
   "item.endless.singularity_copper":"§eSingularity Copper",
+  "item.endless.singularity_zinc":"§eSingularity Zinc",
+  "item.endless.singularity_platinum":"§eSingularity Platinum",
+  "item.endless.singularity_nickel":"§eSingularity Nickel",
+  "item.endless.singularity_lead":"§eSingularity Lead",
+  "item.endless.singularity_tin":"§eSingularity Tin",
+
   "item.endless.crystal_pickaxe":"§bCrystal Pickaxe",
   "item.endless.crystal_axe":"§bCrystal Axe",
   "item.endless.crystal_shovel":"§bCrystal Shovel",
@@ -51,6 +57,7 @@
   "item.endless.infinity_sword":"§cInfinity Sword",
   "item.endless.skullfire_sword":"§dSkullfire Sword",
   "item.endless.infinity_bow":"§cInfinity Bow",
+  "item.endless.infinity_crossbow":"§cInfinity Crossbow",
 
   "item.endless.infinity_head":"§cInfinity Head",
   "item.endless.infinity_chest":"§cInfinity Chest",
@@ -77,7 +84,7 @@
   "block.endless.triple_neutron_collector":"Triple Neutron Collector",
   "block.endless.neutronium_compressor":"Neutronium Compressor",
   "block.endless.compressor_chest":"Compressor Chest",
-  "block.endless.infinity_box":"Infinity Box",
+  "block.endless.infinity_box":"§cInfinity Box",
 
   "entity.endless.infinity_arrow":"Infinity Arrow",
   "entity.endless.infinity_arrow_sub":"Infinity Arrow Sub",

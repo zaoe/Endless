@@ -1,12 +1,19 @@
 package com.yuo.endless.Container;
 
+import com.yuo.endless.Recipe.ExtremeCraftRecipe;
 import com.yuo.endless.Recipe.ExtremeCraftingManager;
+import com.yuo.endless.Recipe.RecipeTypeRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.CraftingResultSlot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.ICraftingRecipe;
+import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.util.NonNullList;
+import net.minecraft.world.World;
+
+import java.util.Optional;
 
 public class ExtremeCraftReslutSlot extends CraftingResultSlot {
     private final CraftingInventory craftMatrix;
@@ -22,7 +29,17 @@ public class ExtremeCraftReslutSlot extends CraftingResultSlot {
     public ItemStack onTake(PlayerEntity thePlayer, ItemStack stack) {
         this.onCrafting(stack);
         net.minecraftforge.common.ForgeHooks.setCraftingPlayer(thePlayer);
-        NonNullList<ItemStack> nonnulllist= ExtremeCraftingManager.getInstance().getRecipeShirkItem((ExtremeCraftInventory) this.craftMatrix, thePlayer.world);
+        NonNullList<ItemStack> nonnulllist; //优先匹配工作台配方，没有则配方无尽配方
+        World world = thePlayer.world;
+        Optional<ExtremeCraftRecipe> recipeOptional = world.getRecipeManager().getRecipe(RecipeTypeRegistry.EXTREME_CRAFT_RECIPE, this.craftMatrix, world);
+        if (recipeOptional.isPresent()){
+            nonnulllist = world.getRecipeManager().getRecipeNonNull(RecipeTypeRegistry.EXTREME_CRAFT_RECIPE, this.craftMatrix, world);
+        }else {
+            Optional<ICraftingRecipe> optional = world.getRecipeManager().getRecipe(IRecipeType.CRAFTING, this.craftMatrix, world);
+            if (optional.isPresent()){
+                nonnulllist = world.getRecipeManager().getRecipeNonNull(IRecipeType.CRAFTING, this.craftMatrix, world);
+            }else nonnulllist = ExtremeCraftingManager.getInstance().getRecipeShirkItem((ExtremeCraftInventory) this.craftMatrix, world);
+        }
         net.minecraftforge.common.ForgeHooks.setCraftingPlayer(null);
 
         for(int i = 0; i < nonnulllist.size(); ++i) {

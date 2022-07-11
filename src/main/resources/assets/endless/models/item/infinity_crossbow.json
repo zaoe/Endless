@@ -1,0 +1,42 @@
+{
+    "parent": "item/crossbow",
+    "textures": {
+        "layer0": "endless:item/tool/infinity_crossbow_standby",
+        "layer1": "endless:item/tool/infinity_crossbow_core"
+    },
+    "overrides": [
+        {
+            "predicate": {
+                "endless:pulling": 1
+            },
+            "model": "endless:item/infinity_crossbow_pulling_0"
+        },
+        {
+            "predicate": {
+                "endless:pulling": 1,
+                "endless:pull": 0.58
+            },
+            "model": "endless:item/infinity_crossbow_pulling_1"
+        },
+        {
+            "predicate": {
+                "endless:pulling": 1,
+                "endless:pull": 1.0
+            },
+            "model": "endless:item/infinity_crossbow_pulling_2"
+        },
+        {
+            "predicate": {
+                "endless:charged": 1
+            },
+            "model": "endless:item/infinity_crossbow_arrow"
+        },
+        {
+            "predicate": {
+                "endless:charged": 1,
+                "endless:firework": 1
+            },
+            "model": "endless:item/infinity_crossbow_firework"
+        }
+    ]
+}

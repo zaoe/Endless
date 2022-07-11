@@ -7,7 +7,9 @@ import com.yuo.endless.Blocks.BlockRegistry;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.*;
+import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.NonNullList;
@@ -105,10 +107,46 @@ public class ExtremeCraftRecipe implements IExtremeCraftRecipe {
     //检查配方是否与合成台物品栏吻合
     @Override
     public boolean matches(IInventory inv, World worldIn) {
-        int size = items.size();
-        for (int i = 0; i < size; i++){
-            if (!items.get(i).test(inv.getStackInSlot(i))) return false;
+//        int size = items.size();
+//        for (int i = 0; i < size; i++){
+//            if (!items.get(i).test(inv.getStackInSlot(i))) return false;
+//        }
+//        return true;
+        for(int i = 0; i <= 9 - this.Width; ++i) {
+            for(int j = 0; j <= 9 - this.Height; ++j) {
+                if (this.checkMatch(inv, i, j, true)) {
+                    return true;
+                }
+
+                if (this.checkMatch(inv, i, j, false)) {
+                    return true;
+                }
+            }
         }
+
+        return false;
+    }
+
+    private boolean checkMatch(IInventory inv, int width, int height, boolean p_77573_4_) {
+        for(int i = 0; i < 9; ++i) {
+            for(int j = 0; j < 9; ++j) {
+                int k = i - width;
+                int l = j - height;
+                Ingredient ingredient = Ingredient.EMPTY;
+                if (k >= 0 && l >= 0 && k < this.Width && l < this.Height) {
+                    if (p_77573_4_) {
+                        ingredient = this.items.get(this.Width - k - 1 + l * this.Width);
+                    } else {
+                        ingredient = this.items.get(k + l * this.Width);
+                    }
+                }
+
+                if (!ingredient.test(inv.getStackInSlot(i + j * 9))) {
+                    return false;
+                }
+            }
+        }
+
         return true;
     }
 
@@ -297,7 +335,7 @@ public class ExtremeCraftRecipe implements IExtremeCraftRecipe {
             throw new JsonParseException("Disallowed data tag found");
         } else {
             int i = JSONUtils.getInt(object, "count", 1);
-            return net.minecraftforge.common.crafting.CraftingHelper.getItemStack(object, true);
+            return CraftingHelper.getItemStack(object, true);
         }
     }
 }

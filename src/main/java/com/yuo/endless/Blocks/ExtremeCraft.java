@@ -2,10 +2,12 @@ package com.yuo.endless.Blocks;
 
 import com.yuo.endless.Container.ExtremeCraftContainer;
 import com.yuo.endless.Tiles.ExtremeCraftTile;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.inventory.container.SimpleNamedContainerProvider;
 import net.minecraft.stats.Stats;
@@ -71,7 +73,7 @@ public class ExtremeCraft extends Block {
         if (!state.isIn(newState.getBlock())) {
             TileEntity tileentity = worldIn.getTileEntity(pos);
             if (tileentity instanceof ExtremeCraftTile) {
-                InventoryHelper.dropInventoryItems(worldIn, pos, (ExtremeCraftTile)tileentity);
+                ((ExtremeCraftTile) tileentity).dropItem(worldIn, pos);
                 worldIn.updateComparatorOutputLevel(pos, this);
             }
 
