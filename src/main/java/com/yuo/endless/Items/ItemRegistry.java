@@ -137,9 +137,9 @@ public class ItemRegistry {
 	public static RegistryObject<Item> singularityZinc; //锌
 //	public static RegistryObject<Item> singularityPlatinum; //铂
 //	public static RegistryObject<Item> singularityAluminum; //铝
-	public static RegistryObject<Item> singularityNickel; //镍
-	public static RegistryObject<Item> singularityLead; //铅
-	public static RegistryObject<Item> singularityTin; //锡
+//	public static RegistryObject<Item> singularityNickel; //镍
+//	public static RegistryObject<Item> singularityLead; //铅
+//	public static RegistryObject<Item> singularityTin; //锡
 //	public static RegistryObject<Item> singularityIridium; //铱
 
 	//强力装备
@@ -173,9 +173,9 @@ public class ItemRegistry {
 	public static void registerThermal(){
 //		singularityPlatinum = ITEMS.register("singularity_platinum", () -> new Singularity(0x649db2, 0xd3fcff));
 //		singularityAluminum = ITEMS.register("singularity_aluminum", () -> new Singularity(0x, 0x));
-		singularityNickel = ITEMS.register("singularity_nickel", () -> new Singularity(0x916e4d, 0xf9f5ab));
-		singularityLead = ITEMS.register("singularity_lead", () -> new Singularity(0x232457, 0x393c61));
-		singularityTin = ITEMS.register("singularity_tin", () -> new Singularity(0x517c88, 0x88a2a7));
+//		singularityNickel = ITEMS.register("singularity_nickel", () -> new Singularity(0x916e4d, 0xf9f5ab));
+//		singularityLead = ITEMS.register("singularity_lead", () -> new Singularity(0x232457, 0x393c61));
+//		singularityTin = ITEMS.register("singularity_tin", () -> new Singularity(0x517c88, 0x88a2a7));
 //		singularityIridium = ITEMS.register("singularity_iridium", () -> new Singularity(0xaab59d, 0xb5d1ba));
 	}
 }

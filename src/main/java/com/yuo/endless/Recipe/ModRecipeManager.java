@@ -11,7 +11,6 @@ import com.yuo.endless.Items.ItemRegistry;
 import com.yuo.spacearms.Blocks.BlockRegistry;
 import hellfirepvp.astralsorcery.common.lib.BlocksAS;
 import mods.flammpfeil.slashblade.init.SBItems;
-import moze_intel.projecte.gameObjs.registries.PEBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.ItemStack;
@@ -542,14 +541,15 @@ public class ModRecipeManager {
         ExtremeCraftingManager.getInstance().addRecipe(new ItemStack(ItemRegistry.endestPearl.get()),
                 "   EEE   ",
                 " EEPPPEE ",
-                " EPPPPPE ",
-                "EPPPNPPPE",
-                "EPPNSNPPE",
-                "EPPPNPPPE",
-                " EPPPPPE ",
+                " EPPAPPE ",
+                "EPPANAPPE",
+                "EPANSNAPE",
+                "EPPANAPPE",
+                " EPPAPPE ",
                 " EEPPPEE ",
                 "   EEE   ",
                 'E', new ItemStack(Blocks.END_STONE),
+                'A', new ItemStack(Blocks.TNT),
                 'P', new ItemStack(Items.ENDER_PEARL),
                 'S', new ItemStack(Items.NETHER_STAR),
                 'N', new ItemStack(ItemRegistry.neutroniumIngot.get()));
@@ -686,10 +686,10 @@ public class ModRecipeManager {
                         new ItemStack(block));
             }
         }
-        if (Endless.isProjecte){ //36+1 41 42
-            ExtremeCraftingManager.getInstance().addRecipeInput(infinityCatalyst,
-                    new ItemStack(PEBlocks.RED_MATTER));
-        }
+//        if (Endless.isProjecte){ //36+1 41 42
+//            ExtremeCraftingManager.getInstance().addRecipeInput(infinityCatalyst,
+//                    new ItemStack(PEBlocks.RED_MATTER));
+//        }
         if (Endless.isTheTwilightForest){ //37+1 41+1 42+1
             ExtremeCraftingManager.getInstance().addRecipeInput(infinityCatalyst,
                     new ItemStack(TFBlocks.ironwood_block.get()));

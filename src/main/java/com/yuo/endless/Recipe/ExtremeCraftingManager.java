@@ -188,7 +188,7 @@ public class ExtremeCraftingManager {
             }
         }
 
-        ExtremeCraftRecipe recipe = new ExtremeCraftRecipe(result.getItem().getRegistryName(), 9, 9, getList(arraylist), result);
+        ExtremeCraftRecipe recipe = new ExtremeCraftRecipe(result.getItem().getRegistryName(), Math.min(arraylist.size(), 9), (int) Math.ceil(arraylist.size() / 9d), getList(arraylist), result);
         this.recipes.add(recipe);
         return recipe;
     }
@@ -259,7 +259,7 @@ public class ExtremeCraftingManager {
      */
     public ItemStack getRecipeOutPut(ExtremeCraftInventory inventory, World world){
         for (ExtremeCraftRecipe recipe : this.recipes) {
-            if (recipe.matches(inventory, world)){
+            if (recipe.checkRecipe(inventory, world)){
                 return recipe.getRecipeOutput();
             }
         }
@@ -268,17 +268,18 @@ public class ExtremeCraftingManager {
     }
 
     /**
-     * 获取合成后消耗后的物品列表
+     * 获取合成后的剩余容器 eg：水桶 -> 桶
      * @param inventory 输入容器
      * @param world 世界
      * @return 物品列表
      */
     public NonNullList<ItemStack> getRecipeShirkItem(ExtremeCraftInventory inventory, World world){
         for (ExtremeCraftRecipe recipe : this.recipes) {
-            if (recipe.matches(inventory, world)){
+            if (recipe.checkRecipe(inventory, world)){
                 return recipe.getRemainingItems(inventory);
             }
         }
+
         return NonNullList.withSize(inventory.getSizeInventory(), ItemStack.EMPTY);
     }
 

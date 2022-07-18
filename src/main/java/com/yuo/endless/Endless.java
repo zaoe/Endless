@@ -69,6 +69,9 @@ public class Endless {
         if (isIceandfire){
             ItemRegistry.registerIafItem();
         }
+        if (isCreate){
+            ItemRegistry.registerCreate();
+        }
 
         modEventBus.addListener(this::commonSetup);
         //注册物品至mod总线

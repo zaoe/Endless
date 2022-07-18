@@ -3,7 +3,7 @@ loaderVersion="[35,)"
 license="All rights reserved"
 [[mods]] #mandatory
 modId="endless"
-version="1.16.4-1.2.6"
+version="1.16.4-1.2.7"
 displayName="Endless"
 authors="yuo"
 description='''
@@ -80,5 +80,53 @@ description='''
     modId="twilightforest"
     mandatory=true
     versionRange="[4.0.546, )"
+    ordering="AFTER"
+    side="BOTH"
+[[dependencies.draconicevolution]]
+    modId="draconicevolution"
+    mandatory=true
+    versionRange="[1.16.5-3.0.25.456, )"
+    ordering="AFTER"
+    side="BOTH"
+[[dependencies.botania]]
+    modId="botania"
+    mandatory=true
+    versionRange="[1.16.5-420.2, )"
+    ordering="AFTER"
+    side="BOTH"
+[[dependencies.create]]
+    modId="create"
+    mandatory=true
+    versionRange="[mc1.16.5_v0.3.2g+480, )"
+    ordering="AFTER"
+    side="BOTH"
+[[dependencies.aoa3]]
+    modId="aoa3"
+    mandatory=true
+    versionRange="[1.16.5-3.6.6, )"
+    ordering="AFTER"
+    side="BOTH"
+[[dependencies.slashblade]]
+    modId="slashblade"
+    mandatory=true
+    versionRange="[1.16-0.0.12, )"
+    ordering="AFTER"
+    side="BOTH"
+[[dependencies.thermal]]
+    modId="thermal"
+    mandatory=true
+    versionRange="[1.16.5-1.5.0.14, )"
+    ordering="AFTER"
+    side="BOTH"
+[[dependencies.astralsorcery]]
+    modId="astralsorcery"
+    mandatory=true
+    versionRange="[1.16.5-1.14.1, )"
+    ordering="AFTER"
+    side="BOTH"
+[[dependencies.mysticalagriculture]]
+    modId="mysticalagriculture"
+    mandatory=true
+    versionRange="[1.16.5-4.2.6, )"
     ordering="AFTER"
     side="BOTH"
